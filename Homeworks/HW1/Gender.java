@@ -3,6 +3,6 @@
  **/
 
 public enum Gender {
-    man,
-    woman
+    MAN,
+    WOMAN
 }

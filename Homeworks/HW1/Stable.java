@@ -9,13 +9,20 @@ public class Stable {
 
 
     private static void parseFile(String fileName) throws IOException {
-        //fileName = "Homeworks/HW1/Test Files/2.in";
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         String line = br.readLine();
 
         while (line != null){
-            System.out.println(line);
+
+            String[] info = line.split("\\s");
+
+            if(info[0].charAt(0) == 'm'){
+
+                Person newMan = new Person(Gender.MAN, Integer.parseInt(info[0].substring(1) ));
+            } else if (info[0].charAt(0) == 'w') {
+
+            }
             line = br.readLine();
         }
 
