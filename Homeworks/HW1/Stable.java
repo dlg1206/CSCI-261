@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * @author Derek Garcia
@@ -9,58 +9,54 @@ import java.util.HashMap;
 public class Stable {
 
 
+    private static LinkedHashMap<String, ArrayList<String>> parseFile(String fileName) throws IOException {
 
-    private static HashMap<String, ArrayList<String>> parseFile(String fileName) throws IOException {
+        // Create new Buffered Reader
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-
         br.readLine();
 
-        HashMap<String, ArrayList<String>>  people = new HashMap<>();
+        LinkedHashMap<String, ArrayList<String>> people = new LinkedHashMap<>();
 
-        String line = br.readLine();
+        String line = br.readLine();    // trash 1st line
 
-        while (line != null && !line.equals("") ){
+        // Read all contnent lines
+        while (line != null && !line.equals("")) {
 
-            String[] info = line.split("\\s");
+            String[] info = line.split("\\s");  // strip whitespace
 
+            // Get the first name
             String name = "";
             int n = 0;
-            while (name.equals("")){
+            while (name.equals("")) {
                 name = info[n++];
             }
 
-            if(!people.containsKey(name)){
+            // Add to peoples list if not already added
+            if (!people.containsKey(name)) {
                 people.put(name, new ArrayList<>());
             }
 
-
-            for(int i = n; i < info.length; i++){
-
-                if(!info[i].equals("")){
-
+            // Add preferences
+            for (int i = n; i < info.length; i++) {
+                if (!info[i].equals("")) {
+                    // Add prefix for simplicity
                     switch (name.charAt(0)) {
                         case 'm' -> people.get(name).add("w" + info[i]);
                         case 'w' -> people.get(name).add("m" + info[i]);
                     }
-
                 }
-
             }
-
             line = br.readLine();
         }
-
         br.close();
-
         return people;
-
     }
 
 
-    private static HashMap<String , String> match(HashMap<String, ArrayList<String>> people){
+    private static LinkedHashMap<String, String> match(LinkedHashMap<String, ArrayList<String>> people) {
 
         // ONLY men keys
-        HashMap<String , String> matches = new HashMap<>();
+        LinkedHashMap<String, String> matches = new LinkedHashMap<>();
 
         // Repeat until every man has a match
         while (matches.size() != people.size() / 2) {
@@ -105,21 +101,21 @@ public class Stable {
     }
 
 
-    private static void output(String destName, HashMap<String, ArrayList<String>> people,
-                               HashMap<String, String> matches) throws IOException {
+    private static void output(String destName, LinkedHashMap<String, ArrayList<String>> people,
+                               LinkedHashMap<String, String> matches) throws IOException {
 
         // Make new file and file writer
         File dest = new File(destName);
         FileWriter fw = new FileWriter(dest);
 
         // Print Size
-        fw.write(matches.size()+ "\n");
+        fw.write(matches.size() + "\n");
 
         // Print each person and their preferences
-        for(String person : people.keySet()){
+        for (String person : people.keySet()) {
             fw.write(person + " ");
             // Print preferences
-            for(String pref : people.get(person)){
+            for (String pref : people.get(person)) {
                 fw.write(pref.replaceAll("[mw]", "") + " ");    // rid prefix
             }
             fw.write("\n");
@@ -134,8 +130,8 @@ public class Stable {
 
 
     public static void main(String[] args) throws IOException {
-        HashMap<String, ArrayList<String>> people = parseFile(args[0]); // Parse Input
-        HashMap<String , String> matches = match(people);               // Generate Matches
+        LinkedHashMap<String, ArrayList<String>> people = parseFile(args[0]); // Parse Input
+        LinkedHashMap<String, String> matches = match(people);               // Generate Matches
         output(args[1], people, matches);                               // Write results to output file
     }
 }
