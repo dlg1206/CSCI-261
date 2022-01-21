@@ -57,7 +57,7 @@ public class Stable {
     }
 
 
-    private static void match(HashMap<String, ArrayList<String>> people){
+    private static HashMap<String , String> match(HashMap<String, ArrayList<String>> people){
 
         // ONLY men keys
         HashMap<String , String> matches = new HashMap<>();
@@ -100,12 +100,42 @@ public class Stable {
                 }
             }
         }
+
+        return matches;
+    }
+
+
+    private static void output(String destName, HashMap<String, ArrayList<String>> people,
+                               HashMap<String, String> matches) throws IOException {
+
+        // Make new file and file writer
+        File dest = new File(destName);
+        FileWriter fw = new FileWriter(dest);
+
+        // Print Size
+        fw.write(matches.size()+ "\n");
+
+        // Print each person and their preferences
+        for(String person : people.keySet()){
+            fw.write(person + " ");
+            // Print preferences
+            for(String pref : people.get(person)){
+                fw.write(pref.replaceAll("[mw]", "") + " ");    // rid prefix
+            }
+            fw.write("\n");
+        }
+
+        // Print all matches
+        for (String man : matches.keySet()) {
+            fw.write(man + " " + matches.get(man) + "\n");
+        }
+        fw.close();
     }
 
 
     public static void main(String[] args) throws IOException {
-
-        HashMap<String, ArrayList<String>> people = parseFile(args[0]);
-        match(people);
+        HashMap<String, ArrayList<String>> people = parseFile(args[0]); // Parse Input
+        HashMap<String , String> matches = match(people);               // Generate Matches
+        output(args[1], people, matches);                               // Write results to output file
     }
 }
