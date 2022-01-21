@@ -59,54 +59,68 @@ public class Stable {
 
     private static void match(HashMap<String, ArrayList<String>> people){
 
-        // ONLY men
+        // ONLY men keys
         HashMap<String , String> matches = new HashMap<>();
 
-        for(String man: people.keySet()){
+        // Repeat until every man has a match
+        while (matches.size() != people.size() / 2) {
 
-            // if man and free
-            if(man.contains("m") && !matches.containsKey(man)){
+            // Cycle through all people
+            for (String man : people.keySet()) {
 
-                for(String woman : people.get(man)){
+                // If a man and free (ie not matched)
+                if (man.contains("m") && !matches.containsKey(man)) {
 
-                    System.out.println(man + " is proposing to " + woman);
-                    // if women is free
-                    if(!matches.containsValue(woman)){
-                        // engage
-                        System.out.println(man + " and " + woman + " are engaged!");
-                        matches.put(man, woman );
-                        break;
+                    // Cycle through man's preferences
+                    for (String woman : people.get(man)) {
+                        System.out.println(man + " is proposing to " + woman);
+
+                        // If woman free, engage
+                        if (!matches.containsValue(woman)) {
+                            System.out.println(man + " and " + woman + " are engaged!");
+                            matches.put(man, woman);
+                            break;
+                        }
                     }
+
+                    // Check woman's preferences
+                    String woman = matches.get(man);
+                    for (String wPref : people.get(woman)) {
+
+                        // If woman's preference not engaged, leave current man for preference
+                        if (!matches.containsKey(wPref)) {
+                            System.out.println("\t" +woman + " left " + man + " for " + wPref + "...");
+                            matches.put(wPref, woman);  // new engagement
+                            matches.remove(man);    // old man set as "free" (ie unmatched)
+                            System.out.println(wPref + " and " + woman + " are engaged!");
+                            break;
+                        }
+
+                        // If woman's preference matches current man, stay engaged
+                        if (wPref.equals(man)) {
+                            System.out.println("\t" + woman + " is a happy with " + man + " :)");
+                            break;  // no need to cont. checking
+                        }
+                    }
+                } else {
+
+                    if(man.contains("m")){
+                        System.out.println(man + " is already engaged");
+                    } else {
+                        System.out.println("\t" + man + " is a woman 0.o");
+                    }
+
                 }
-
-                String currWoman = matches.get(man);
-
-                // Check woman pref
-                for(String pref : people.get(currWoman)){
-
-                    // if higher pref not match, enage
-                    if(!matches.containsKey(pref)){
-                        System.out.println(currWoman + " left " + man + " for " + pref + "...");
-                        matches.put(pref, currWoman);
-                        matches.remove(man);
-                        System.out.println(pref + " and " + currWoman + " are engaged!");
-                        break;
-                    }
-
-                    // break when reach curr fiance
-                    if(pref.equals(man)){
-                        break;
-                    }
-                }
-            } else {
-                System.out.println(man + " is a woman 0.o");
             }
         }
 
         // replace
-        for(String man : matches.keySet()){
+        System.out.println("Results");
+        for (String man : matches.keySet()) {
+
             System.out.println("(" + man + ", " + matches.get(man) + ")");
         }
+
     }
 
 
