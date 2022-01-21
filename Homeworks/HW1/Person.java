@@ -5,18 +5,27 @@ import java.util.ArrayList;
  * @author Derek Garcia
  **/
 
+enum Status{
+    SINGLE,
+    MATCHED
+}
+
 public class Person {
     private Gender gender;
     private int ID;
-    private ArrayList<Integer> preferences;
+    private Status status;
 
     public Person(Gender gender, int ID){
         this.gender = gender;
         this.ID = ID;
-        this.preferences = new ArrayList<>();
+        this.status = Status.SINGLE;
     }
 
-    public void addPref(int ID){
-        this.preferences.add(ID);
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
     }
 }
