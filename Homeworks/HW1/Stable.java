@@ -19,7 +19,7 @@ public class Stable {
 
         String line = br.readLine();    // trash 1st line
 
-        // Read all contnent lines
+        // Read all content lines
         while (line != null && !line.equals("")) {
 
             String[] info = line.split("\\s");  // strip whitespace
@@ -53,6 +53,15 @@ public class Stable {
     }
 
 
+    private static LinkedHashMap<String, ArrayList<String>> deepCopy(LinkedHashMap<String, ArrayList<String>> lhm){
+        LinkedHashMap<String, ArrayList<String>> copy = new LinkedHashMap<>();
+
+        for(String key : lhm.keySet()){
+            copy.put(key, (ArrayList<String>) lhm.get(key).clone());
+        }
+        return copy;
+    }
+
     private static LinkedHashMap<String, String> match(LinkedHashMap<String, ArrayList<String>> people) {
 
         // ONLY men keys
@@ -62,37 +71,45 @@ public class Stable {
         while (matches.size() != people.size() / 2) {
 
             // Cycle through all people
-            for (String man : people.keySet()) {
+            for (String currMan : people.keySet()) {
 
                 // If a man and free (ie not matched)
-                if (man.contains("m") && !matches.containsKey(man)) {
+                if (currMan.contains("m") && !matches.containsKey(currMan)) {
 
-                    // Cycle through man's preferences
-                    for (String woman : people.get(man)) {
+                    String woman = people.get(currMan).remove(0); // pop list
 
-                        // If woman free, engage
-                        if (!matches.containsValue(woman)) {
-                            matches.put(man, woman);    // engage
-                            break;
+                    // If woman free, engage
+                    if (!matches.containsValue(woman)) {
+                        matches.put(currMan, woman);    // engage
+                    } else {
+
+                        // Get fiance
+                        String fiance = "";
+                        for(String man : matches.keySet()){
+                            if(matches.get(man).equals(woman)){
+                                fiance = man;
+                                break;
+                            }
+                        }
+
+                        // Check woman's preferences
+                        for (String wPref : people.get(woman)) {
+
+                            // If woman prefers current man, leaves fiance, fiance becomes free
+                            if (wPref.equals(currMan)) {
+                                matches.put(wPref, woman);  // new engagement
+                                matches.remove(fiance);    // fiance set as "free" (ie unmatched)
+                                break;
+                            }
+
+                            // If woman's preference matches her fiance before the current man, stay engaged
+                            if (wPref.equals(fiance)) {
+                                break;  // no need to cont. checking
+                            }
                         }
                     }
 
-                    // Check woman's preferences
-                    String woman = matches.get(man);
-                    for (String wPref : people.get(woman)) {
 
-                        // If woman's preference not engaged, leave current man for preference
-                        if (!matches.containsKey(wPref)) {
-                            matches.put(wPref, woman);  // new engagement
-                            matches.remove(man);    // old man set as "free" (ie unmatched)
-                            break;
-                        }
-
-                        // If woman's preference matches current man, stay engaged
-                        if (wPref.equals(man)) {
-                            break;  // no need to cont. checking
-                        }
-                    }
                 }
             }
         }
@@ -130,8 +147,8 @@ public class Stable {
 
 
     public static void main(String[] args) throws IOException {
-        LinkedHashMap<String, ArrayList<String>> people = parseFile(args[0]); // Parse Input
-        LinkedHashMap<String, String> matches = match(people);               // Generate Matches
+        LinkedHashMap<String, ArrayList<String>> people = parseFile(args[0]);       // Parse Input
+        LinkedHashMap<String, String> matches = match(deepCopy(people)); // Generate Matches
         output(args[1], people, matches);                               // Write results to output file
     }
 }
