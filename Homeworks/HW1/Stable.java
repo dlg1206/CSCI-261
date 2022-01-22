@@ -57,7 +57,12 @@ public class Stable {
         LinkedHashMap<String, ArrayList<String>> copy = new LinkedHashMap<>();
 
         for(String key : lhm.keySet()){
-            copy.put(key, (ArrayList<String>) lhm.get(key).clone());
+            copy.put(key, new ArrayList<>());
+
+            for (String pref : lhm.get(key)){
+                copy.get(key).add(pref);
+            }
+
         }
         return copy;
     }
