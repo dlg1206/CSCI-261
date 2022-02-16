@@ -21,12 +21,12 @@ public class Graph {
      * @return graph
      * @throws IOException filename is bad
      */
-    private static HashMap<Integer, Node> parseFile(String fileName) throws IOException {
+    private static Node[] parseFile(String fileName) throws IOException {
         // Create new Buffered Reader
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-        br.readLine();  // trash first line
+        int numNodes = Integer.parseInt(br.readLine());  // get number of nodes
 
-        HashMap<Integer, Node> graph = new HashMap<>();
+        Node[] graph = new Node[numNodes + 1];  // +1 to so nodeID == Index
 
         String line = br.readLine();    // get first node info
 
@@ -35,19 +35,19 @@ public class Graph {
         // Read entire file
         while (line != null){
 
-            String[] test = line.split(" ");    // gets adj nodes
+            String[] adjNodes = line.split(" ");    // gets adj nodes
 
             // init node if needed
-            if(!graph.containsKey(nodeID)){
-                graph.put(nodeID, new Node(nodeID));
+            if(graph[nodeID] == null){
+                graph[nodeID] = new Node(nodeID);
             }
 
-            Node curNode = graph.get(nodeID);
+            Node curNode = graph[nodeID];
 
             boolean skippedFirst = false;
 
             // Add all adj nodes
-            for(String adj : test){
+            for(String adj : adjNodes){
                 // skip over "Node[n]:"
                 if(!skippedFirst){
                     skippedFirst = true;
@@ -57,11 +57,11 @@ public class Graph {
                 int adjID = Integer.parseInt(adj);
 
                 // Init adj node if needed
-                if(!graph.containsKey(adjID)){
-                    graph.put(adjID, new Node(adjID));
+                if(graph[adjID] == null){
+                    graph[adjID] =  new Node(adjID);
                 }
 
-                curNode.addEdge(graph.get(adjID));
+                curNode.addEdge(graph[adjID]);
             }
 
             nodeID++;   // move to next node
@@ -77,19 +77,20 @@ public class Graph {
      * Does a breadth first search of a given graph at a start node
      * Will recursively go through graph if it detects not all nodes were reached
      *
+     * Updates given graph
+     *
      * @param componentNum Component number / recursive depth
      * @param startNode Node to start at
      * @param graph graph to search through
-     * @return updated graph with nodes set to a layer on a BFS tree
      */
-    private static HashMap<Integer, Node> doBFS(int componentNum, int startNode, HashMap<Integer, Node> graph){
+    private static void doBFS(int componentNum, int startNode, Node[] graph){
 
         // init vars
         LinkedList<Node> visitQueue = new LinkedList<>();
         boolean bipartite = true;
 
         // Get initial node
-        Node curNode = graph.get(startNode);
+        Node curNode = graph[startNode];
         curNode.layer = 0;
 
         System.out.println("connected component: " + componentNum);
@@ -133,15 +134,13 @@ public class Graph {
         }
 
         // check for skipped nodes
-        for(Node node : graph.values()){
+        for(Node node : graph){
             // Do another BFS if skipped node found
-            if(node.layer < 0){
+            if(node != null && node.layer < 0){
                 doBFS(++componentNum, node.id, graph);
             }
         }
 
-        // Return updated graph
-        return graph;
     }
 
 
@@ -150,11 +149,14 @@ public class Graph {
      *
      * @param graph graph to print
      */
-    private static void printGraph(HashMap<Integer, Node> graph){
+    private static void printGraph(Node[] graph){
 
-        System.out.println(graph.size());
-        for(Node node : graph.values()){
-            System.out.println(node);
+        System.out.println(graph.length - 1);   // skip null graph[0]
+        for(Node node : graph){
+            if(node != null){
+                System.out.println(node);
+            }
+
         }
 
         System.out.println();   // newline
@@ -169,7 +171,7 @@ public class Graph {
      * @throws IOException file name is bad
      */
     public static void main(String[] args) throws IOException {
-        HashMap<Integer, Node> graph = parseFile(args[0]);
+        Node[] graph = parseFile(args[0]);
         printGraph(graph);
         doBFS(1,1, graph);
 
