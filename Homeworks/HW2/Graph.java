@@ -77,10 +77,12 @@ public class Graph {
         // init vars
         LinkedList<Node> visitQueue = new LinkedList<>();
 
+        boolean bipartite = true;
+
         Node curNode = graph.get(startNode);
         curNode.layer = 0;
 
-        System.out.println("Connected component: " + componentNum);
+        System.out.println("connected component: " + componentNum);
         for(;;){
 
             System.out.print(curNode.id + "(" + curNode.layer +") ");
@@ -93,7 +95,12 @@ public class Graph {
                     visitQueue.add(adj);
                 }
 
+                if(adj.layer == curNode.layer){
+                    bipartite = false;
+                }
+
             }
+
 
             if(visitQueue.isEmpty()){
                 break;
@@ -104,6 +111,13 @@ public class Graph {
         }
 
         System.out.println();
+
+        if(bipartite){
+            System.out.println(BIPARTITE);
+        } else {
+            System.out.println(NOT_BIPARTITE);
+        }
+
 
         // check for skipped nodes
         for(Node node : graph.values()){
