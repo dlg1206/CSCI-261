@@ -10,6 +10,9 @@ import java.util.*;
 
 public class Graph {
 
+    final static String BIPARTITE = "bipartite";
+    final static String NOT_BIPARTITE = "not bipartite";
+
 
     /**
      * Parses input file to create a hashmap graph of given values
@@ -69,7 +72,7 @@ public class Graph {
         return graph;
     }
 
-    private static HashMap<Integer, Node> doBFS(int startNode, HashMap<Integer, Node> graph){
+    private static HashMap<Integer, Node> doBFS(int componentNum, int startNode, HashMap<Integer, Node> graph){
 
         // init vars
         LinkedList<Node> visitQueue = new LinkedList<>();
@@ -77,7 +80,8 @@ public class Graph {
         Node curNode = graph.get(startNode);
         curNode.layer = 0;
 
-        while(true){
+        System.out.println("Connected component: " + componentNum);
+        for(;;){
 
             System.out.print(curNode.id + "(" + curNode.layer +") ");
 
@@ -99,6 +103,19 @@ public class Graph {
 
         }
 
+        System.out.println();
+
+        // check for skipped nodes
+        for(Node node : graph.values()){
+
+            // -1 + -1 = -2
+            if(node.layer < 0){
+                doBFS(++componentNum, node.id, graph);
+            }
+
+        }
+
+
 
 
         return graph;
@@ -111,6 +128,8 @@ public class Graph {
             System.out.println(node);
         }
 
+        System.out.println();
+
     }
 
 
@@ -118,7 +137,7 @@ public class Graph {
     public static void main(String[] args) throws IOException {
         HashMap<Integer, Node> graph = parseFile(args[0]);
         printGraph(graph);
-        doBFS(1, graph);
+        doBFS(1,1, graph);
 
 
     }
