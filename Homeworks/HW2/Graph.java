@@ -69,21 +69,17 @@ public class Graph {
         return graph;
     }
 
-    private static HashMap<Integer, LinkedList<Node>> doBFS(HashMap<Integer, Node> graph){
+    private static HashMap<Integer, Node> doBFS(int startNode, HashMap<Integer, Node> graph){
 
         // init vars
         LinkedList<Node> visitQueue = new LinkedList<>();
-        HashMap<Integer, LinkedList<Node>> layers = new HashMap<>();
 
-        Node curNode = graph.get(1);
+        Node curNode = graph.get(startNode);
         curNode.layer = 0;
 
         while(true){
-            if(!layers.containsKey(curNode.layer)){
-                layers.put(curNode.layer, new LinkedList<>());
-            }
 
-            layers.get(curNode.layer).add(curNode);
+            System.out.print(curNode.id + "(" + curNode.layer +") ");
 
             for(Node adj : curNode.adj){
 
@@ -103,7 +99,9 @@ public class Graph {
 
         }
 
-        return layers;
+
+
+        return graph;
     }
 
     private static void printGraph(HashMap<Integer, Node> graph){
@@ -115,25 +113,13 @@ public class Graph {
 
     }
 
-    private static void printLayers(HashMap<Integer, LinkedList<Node>> layers){
-
-        for(int i = 0; i < layers.size(); i++){
-
-            for(Node node : layers.get(i)){
-
-                System.out.print(node.id + "(" + node.layer +") ");
-            }
-
-        }
-    }
 
 
     public static void main(String[] args) throws IOException {
         HashMap<Integer, Node> graph = parseFile(args[0]);
-
-        HashMap<Integer, LinkedList<Node>> layers = doBFS(graph);
         printGraph(graph);
-        printLayers(layers);
+        doBFS(1, graph);
+
 
     }
 
