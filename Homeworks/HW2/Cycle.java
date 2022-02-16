@@ -13,6 +13,9 @@ public class Cycle {
     final static String BIPARTITE = "bipartite";
     final static String NOT_BIPARTITE = "not bipartite";
 
+    final static String CYCLE = "cycle exists";
+    final static String ACYCLIC = "acyclic";
+
 
     /**
      * Parses input file to create a hashmap graph of given values
@@ -88,6 +91,7 @@ public class Cycle {
         // init vars
         LinkedList<Node> visitQueue = new LinkedList<>();
         boolean bipartite = true;
+        boolean acyclic = false;
 
         // Get initial node
         Node curNode = graph[startNode];
@@ -113,6 +117,13 @@ public class Cycle {
                     bipartite = false;
                 }
 
+                for(Node adjChild : adj.adj){
+
+                    if(curNode.adj.contains(adjChild)){
+                        acyclic = true;
+                    }
+                }
+
             }
 
             // Break when nowhere to visit; else get next node
@@ -131,6 +142,12 @@ public class Cycle {
             System.out.println(BIPARTITE);
         } else {
             System.out.println(NOT_BIPARTITE);
+        }
+
+        if(acyclic){
+            System.out.println(ACYCLIC);
+        } else {
+            System.out.println(CYCLE);
         }
 
         // check for skipped nodes
