@@ -1,11 +1,12 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * @author Derek Garcia
  **/
+
 
 public class Graph {
 
@@ -68,15 +69,58 @@ public class Graph {
         return graph;
     }
 
+    private static HashMap<Integer, Node> doBFS(HashMap<Integer, Node> graph){
+
+        // init vars
+        LinkedList<Node> visitQueue = new LinkedList<>();
+        //LinkedList<Node> layers = new ArrayList<>();
+
+        Node curNode = graph.get(1);
+        curNode.layer = 0;
+
+        while(true){
+
+
+            for(Node adj : curNode.adj){
+
+                // If adj hasn't been visited
+                if(adj.layer < 0){
+                    adj.layer = curNode.layer + 1;
+                    visitQueue.add(adj);
+                }
+
+            }
+
+            if(visitQueue.isEmpty()){
+                break;
+            } else {
+                curNode = visitQueue.pop();
+            }
+
+        }
+
+        return graph;
+    }
+
     private static void printGraph(HashMap<Integer, Node> graph){
+
+        StringBuilder layers = new StringBuilder();
+
         System.out.println(graph.size());
         for(Node node : graph.values()){
             System.out.println(node);
+
+            layers.append(" ").append(node.id).append("(").append(node.layer).append(")");
         }
+
+        System.out.println(layers.substring(1));
     }
+
 
     public static void main(String[] args) throws IOException {
         HashMap<Integer, Node> graph = parseFile(args[0]);
+
+        doBFS(graph);
         printGraph(graph);
 
     }
