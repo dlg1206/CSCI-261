@@ -68,8 +68,16 @@ public class Graph {
         return graph;
     }
 
+    private static void printGraph(HashMap<Integer, Node> graph){
+        System.out.println(graph.size());
+        for(Node node : graph.values()){
+            System.out.println(node);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         HashMap<Integer, Node> graph = parseFile(args[0]);
+        printGraph(graph);
 
     }
 
