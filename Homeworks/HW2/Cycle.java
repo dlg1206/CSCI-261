@@ -138,10 +138,12 @@ public class Cycle {
             System.out.println(NOT_BIPARTITE);
         }
 
+        // if no acyclic detection, check full graph
         if(acyclic){
-            acyclic = isAcyclic(graph[startNode], new ArrayList<>(), "");
+            acyclic = isAcyclic(graph[startNode], new ArrayList<>());
         }
 
+        // Print acyclic status
         if(acyclic){
             System.out.println(ACYCLIC);
         } else {
@@ -158,29 +160,36 @@ public class Cycle {
 
     }
 
-    private static boolean isAcyclic(Node currNode, ArrayList<Node> visited, String path){
 
-        System.out.println("Curr node " + currNode.id);
-        path += currNode.id + " -> ";
-        System.out.println("Visited: " + path);
+    /**
+     * Recursive check through a graph to determine if any cycles exist
+     *
+     * @param currNode current node in the graph
+     * @param visited list of visited nodes
+     * @return whether graph is acyclic
+     */
+    private static boolean isAcyclic(Node currNode, ArrayList<Node> visited){
 
+        // Cycle through all adj nodes
         for(Node adj : currNode.adj){
+            /*
+            Cycle exists OR reach node with only 1 adj node (previous node)
+
+            Cycle exists: when reach first level of recursion and still return false
+            Reach end node: return false on current level, not the first
+             */
             if(visited.contains(currNode)){
-                System.out.println("\nLoop detected\n");
                 return false;
             }
 
+            // If haven't visited adj node, visit it
             if(!visited.contains(adj)){
-                System.out.println("\tVisiting " + adj.id);
-                visited.add(currNode);
-                isAcyclic(adj, visited, path);
-
+                visited.add(currNode);  // current node has been visited
+                isAcyclic(adj, visited);
             }
-
         }
 
-        System.out.println("\tNo nodes left to visit from node " + currNode.id);
-
+        // No cycle exists
         return true;
 
     }
