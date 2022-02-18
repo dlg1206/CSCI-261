@@ -115,17 +115,8 @@ public class Cycle {
                 // Bipartite detection
                 if(adj.layer == curNode.layer){
                     bipartite = false;
+                    acyclic = false; // Share parent and adj means cycle
                 }
-
-                if(acyclic){
-                    for(Node adjChild : adj.adj){
-                        if(curNode.adj.contains(adjChild)){
-                            acyclic = false;
-                            break;
-                        }
-                    }
-                }
-
 
             }
 
@@ -148,6 +139,10 @@ public class Cycle {
         }
 
         if(acyclic){
+            acyclic = isAcyclic(graph[startNode], new ArrayList<>(), "");
+        }
+
+        if(acyclic){
             System.out.println(ACYCLIC);
         } else {
             System.out.println(CYCLE);
@@ -163,6 +158,32 @@ public class Cycle {
 
     }
 
+    private static boolean isAcyclic(Node currNode, ArrayList<Node> visited, String path){
+
+        System.out.println("Curr node " + currNode.id);
+        path += currNode.id + " -> ";
+        System.out.println("Visited: " + path);
+
+        for(Node adj : currNode.adj){
+            if(visited.contains(currNode)){
+                System.out.println("\nLoop detected\n");
+                return false;
+            }
+
+            if(!visited.contains(adj)){
+                System.out.println("\tVisiting " + adj.id);
+                visited.add(currNode);
+                isAcyclic(adj, visited, path);
+
+            }
+
+        }
+
+        System.out.println("\tNo nodes left to visit from node " + currNode.id);
+
+        return true;
+
+    }
 
     /**
      * Prints the nodes and its neighbors in a given graph
