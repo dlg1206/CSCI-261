@@ -87,6 +87,8 @@ public class Graph {
 
         // init vars
         LinkedList<Node> visitQueue = new LinkedList<>();
+        ArrayList<Integer> sortQueue = new ArrayList<>();   // for visit nodes in ascending order
+
         boolean bipartite = true;
 
         // Get initial node
@@ -105,7 +107,7 @@ public class Graph {
                 // Add to visit queue if not visited
                 if(adj.layer < 0){
                     adj.layer = curNode.layer + 1;  // adj will always be on the next layer
-                    visitQueue.add(adj);
+                    sortQueue.add(adj.id);  // add id to sort list
                 }
 
                 // Bipartite detection
@@ -114,6 +116,13 @@ public class Graph {
                 }
 
             }
+
+            // sort in ascending order and add to visit queue
+            Collections.sort(sortQueue);
+            for(int adjId : sortQueue){
+                visitQueue.add(graph[adjId]);
+            }
+            sortQueue.clear();  // reset sorting queue
 
             // Break when nowhere to visit; else get next node
             if(visitQueue.isEmpty()){

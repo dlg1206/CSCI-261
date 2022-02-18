@@ -91,7 +91,7 @@ public class Cycle {
         // init vars
         LinkedList<Node> visitQueue = new LinkedList<>();
         boolean bipartite = true;
-        boolean acyclic = false;
+        boolean acyclic = true;
 
         // Get initial node
         Node curNode = graph[startNode];
@@ -117,12 +117,15 @@ public class Cycle {
                     bipartite = false;
                 }
 
-                for(Node adjChild : adj.adj){
-
-                    if(curNode.adj.contains(adjChild)){
-                        acyclic = true;
+                if(acyclic){
+                    for(Node adjChild : adj.adj){
+                        if(curNode.adj.contains(adjChild)){
+                            acyclic = false;
+                            break;
+                        }
                     }
                 }
+
 
             }
 
