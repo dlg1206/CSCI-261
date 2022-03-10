@@ -2,5 +2,5 @@
  * @author Derek Garcia
  **/
 
-public class Dijkstra {
+public class p3Node {
 }
