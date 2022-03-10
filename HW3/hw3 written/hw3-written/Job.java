@@ -2,7 +2,7 @@
  * @author Derek Garcia
  **/
 
-public class Job {
+class Job {
 
     private final int ID;
     private final int pTime;
