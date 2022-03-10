@@ -42,6 +42,7 @@ public class Graph {
                 graph[nodeID] = new Node(nodeID);
             }
 
+
             Node curNode = graph[nodeID];
 
             boolean skippedFirst = false;
