@@ -21,7 +21,7 @@ public class Dijkstra {
     private static p3Node[] parseFile(String fileName) throws IOException {
         // Create new Buffered Reader
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-        int numNodes = Integer.parseInt(br.readLine());  // get number of nodes
+        int numNodes = Integer.parseInt(br.readLine().trim());  // get number of nodes
 
         p3Node[] graph = new p3Node[numNodes + 1];  // +1 to so nodeID == Index
 
