@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 
 /**
 
@@ -12,7 +13,7 @@ public class Dijkstra {
 
 
     /**
-     * Parses input file to create a hashmap graph of given values
+     * Parses input file to create a graph of given values
      *
      * @param fileName name of input file
      * @return graph
@@ -52,14 +53,14 @@ public class Dijkstra {
                 }
 
                 int adjID = Integer.parseInt(adj.split(":")[0]);
-                int weight = Integer.parseInt(adj.split(":")[1]);
+                int distance = Integer.parseInt(adj.split(":")[1]);
 
                 // Init adj node if needed
                 if(graph[adjID] == null){
                     graph[adjID] =  new p3Node(adjID);
                 }
 
-                curNode.addEdge(graph[adjID], weight);
+                curNode.addEdge(graph[adjID], distance);
             }
 
             nodeID++;   // move to next node
@@ -71,8 +72,49 @@ public class Dijkstra {
     }
 
 
+    private static p3Node[] doDijkstra(p3Node[] graph, int source){
+        LinkedList<p3Node> queue = new LinkedList<>();
+
+        p3Node curNode = graph[source];
+        curNode.setDistance(0);
+        int path = 1;
+        for( ;; ){
+
+            for(p3Node adj : curNode.getEdges().keySet()){
+
+                if(adj.getDistance() < 0 && !queue.contains(adj)){
+                    queue.add(adj);
+
+                    int newDist = curNode.getDistance() + curNode.getEdgeWeight(adj);
+
+                    if(adj.getDistance() < 0 || adj.getDistance() > newDist){
+                        adj.setDistance(newDist);
+                        adj.setPath(path);
+                    }
+                }
+            }
+
+            if(queue.isEmpty()){
+                break;
+            } else {
+                path++;
+                curNode = queue.pop();
+            }
+        }
+        return graph;
+    }
+
+
     public static void main(String[] args) throws IOException {
         p3Node[] graph = parseFile(args[0]);
+
+
+
+        if(args.length == 2){
+            doDijkstra(graph, Integer.parseInt(args[1]));
+        } else {
+            doDijkstra(graph, 1);
+        }
 
         for(p3Node node : graph){
             System.out.println(node);
