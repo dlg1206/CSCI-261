@@ -47,6 +47,10 @@ public class p3Node {
         return this.edges.get(otherEnd);
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     @Override
     public String toString() {
         return this.id + " dist: " + this.distance + " path: " + this.path;

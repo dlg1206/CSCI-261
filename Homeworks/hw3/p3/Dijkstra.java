@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
 
@@ -72,36 +72,63 @@ public class Dijkstra {
     }
 
 
-    private static p3Node[] doDijkstra(p3Node[] graph, int source){
+    private static HashMap<Integer, ArrayList<p3Node>> doDijkstra(p3Node[] graph, int source){
         LinkedList<p3Node> queue = new LinkedList<>();
+
+        HashMap<Integer, ArrayList<p3Node>> result = new HashMap<>();
+
 
         p3Node curNode = graph[source];
         curNode.setDistance(0);
-        int path = 1;
+
+        result.put(0, new ArrayList<>());
+        result.get(0).add(curNode);
+
         for( ;; ){
 
+
             for(p3Node adj : curNode.getEdges().keySet()){
+
+
 
                 if(adj.getDistance() < 0 && !queue.contains(adj)){
                     queue.add(adj);
 
-                    int newDist = curNode.getDistance() + curNode.getEdgeWeight(adj);
 
-                    if(adj.getDistance() < 0 || adj.getDistance() > newDist){
-                        adj.setDistance(newDist);
-                        adj.setPath(path);
+                }
+
+                int newDist = curNode.getDistance() + curNode.getEdgeWeight(adj);
+
+                if(adj.getDistance() < 0 || adj.getDistance() > newDist){
+
+                    if(!result.containsKey(newDist)){
+
+                        result.put(newDist, new ArrayList<>());
                     }
+
+                    if(adj.getDistance() >= 0){
+
+                        result.get(adj.getDistance()).remove(adj);
+                    }
+
+
+
+                    adj.setDistance(newDist);
+
+                    result.get(newDist).add(adj);
+                    adj.setPath(curNode.getId());
+
                 }
             }
 
             if(queue.isEmpty()){
                 break;
             } else {
-                path++;
                 curNode = queue.pop();
             }
         }
-        return graph;
+
+        return result;
     }
 
 
@@ -109,15 +136,21 @@ public class Dijkstra {
         p3Node[] graph = parseFile(args[0]);
 
 
-
+        HashMap<Integer, ArrayList<p3Node>> result;
         if(args.length == 2){
-            doDijkstra(graph, Integer.parseInt(args[1]));
+            result = doDijkstra(graph, Integer.parseInt(args[1]));
         } else {
-            doDijkstra(graph, 1);
+            result = doDijkstra(graph, 1);
         }
 
-        for(p3Node node : graph){
-            System.out.println(node);
+        ArrayList<Integer> distances = new ArrayList<>(result.keySet());
+        Collections.sort(distances);
+        for(int dist : distances){
+
+            for(p3Node node : result.get(dist)){
+                System.out.println(node);
+            }
+
         }
 
     }
