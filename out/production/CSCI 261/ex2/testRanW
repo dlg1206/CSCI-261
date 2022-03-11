@@ -1,0 +1,18 @@
+java WordLadder words2 re ti
+3: ti<ts<rs<re (other paths possible)
+
+java WordLadder words3 | grep ode
+3: ode<owe<awe<ace  (other paths possible)
+4: odd<ode<owe<awe<ace
+5: old<odd<ode<owe<awe<ace
+
+java WordLadder words5 venom
+0: venom
+
+java WordLadder words5 stilt hinge
+11: hinge<tinge<tings<tints<tents<teats<seats<stats<state<stale<stile<stilt
+(other correct paths possible)
+
+java WordLadder words4 tern | wc
+   2208    4416   81168
+   

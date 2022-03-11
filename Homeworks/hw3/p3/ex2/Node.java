@@ -15,7 +15,7 @@ public class Node {
     private final LinkedHashMap<Node, Integer> edges;   // adj list
 
     private int distance = -1;
-    private Integer path = null;
+    private Node path = null;
 
 
     /**
@@ -53,6 +53,11 @@ public class Node {
         return this.distance;
     }
 
+    //get parent
+    public Node getParent(){
+        return this.path;
+    }
+
 
     ///
     /// Setters
@@ -64,7 +69,7 @@ public class Node {
     }
 
     // set parent
-    public void setPath(int path) {
+    public void setPath(Node path) {
         this.path = path;
     }
 
@@ -100,7 +105,7 @@ public class Node {
     // prints node correctly
     @Override
     public String toString() {
-        return this.id + " dist: " + this.distance + " path: " + this.path;
+        return this.word;
     }
 
 }

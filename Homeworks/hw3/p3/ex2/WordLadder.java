@@ -3,6 +3,10 @@ package ex2;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * @author Derek Garcia
@@ -68,8 +72,106 @@ public class WordLadder {
         return graph;
     }
 
+    /**
+     * Completes Dijkstra Algorithm
+     *
+     * @param graph Original graph to reference
+     * @param source Node to start at
+     * @return the resulting distance and paths
+     */
+    private static HashMap<Integer, ArrayList<Node>> doDijkstra(Node[] graph, int source){
+
+        // init vars
+        LinkedList<Node> queue = new LinkedList<>();
+        HashMap<Integer, ArrayList<Node>> result = new HashMap<>();
+
+        // Get and set initial node
+        Node curNode = graph[source];
+        curNode.setDistance(0);
+
+        // add to results
+        result.put(0, new ArrayList<>());
+        result.get(0).add(curNode);
+
+        // Repeat until nothing is left in the queue
+        for( ;; ){
+
+            // Go through all od the adjacent nodes to current node
+            for(Node adj : curNode.getEdges().keySet()){
+
+                // Add to queue if adj hasn't been visited and not already in queue
+                if(adj.getDistance() < 0 && !queue.contains(adj)){
+                    queue.add(adj);
+                }
+
+                int newDist = curNode.getDistance() + curNode.getEdgeWeight(adj);   // calculate new distance
+
+                // If distance hasn't been set or the new distance is better
+                if(adj.getDistance() < 0 || adj.getDistance() > newDist){
+
+                    // make new key if needed
+                    if(!result.containsKey(newDist))
+                        result.put(newDist, new ArrayList<>());
+
+                    // if improving distance, remove from old distance
+                    if(adj.getDistance() >= 0)
+                        result.get(adj.getDistance()).remove(adj);
+
+                    // Update values
+                    adj.setDistance(newDist);
+                    adj.setPath(curNode);
+
+                    // update result
+                    result.get(newDist).add(adj);
+                }
+            }
+
+            // End if queue is empty, else get next node
+            if(queue.isEmpty()){
+                break;
+            } else {
+                curNode = queue.pop();
+            }
+        }
+        return result;
+    }
+
+    private static void printResults(HashMap<Integer, ArrayList<Node>> result){
+
+        // sort the keys from least to greatest distance
+        ArrayList<Integer> distances = new ArrayList<>(result.keySet());
+        Collections.sort(distances);
+
+        // go through all distances
+        for(int dist : distances){
+            // print each node
+            for(Node node : result.get(dist)){
+                System.out.print(dist + ": ");
+
+                while(node.getParent() != null){
+                    System.out.print(node + "<");
+                    node = node.getParent();
+                }
+                System.out.println(node);
+
+            }
+        }
+    }
+
 
     public static void main(String[] args) throws IOException {
         Node[] graph = parseFile(args[0]);
+
+        // get result
+        HashMap<Integer, ArrayList<Node>> result;
+        if(args.length == 2){
+            result = doDijkstra(graph, Integer.parseInt(args[1]));  // use given source
+        } else {
+            result = doDijkstra(graph, 1);  // default to 1
+        }
+
+        printResults(result);
+
+
     }
 }
