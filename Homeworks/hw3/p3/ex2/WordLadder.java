@@ -34,17 +34,20 @@ public class WordLadder {
 
             String[] adjNodes = line.split(" ");    // gets adj nodes
 
-            // init node if needed
+            // init full node if needed
             if(graph[nodeID] == null){
-                graph[nodeID] = new Node(nodeID);
+                graph[nodeID] = new Node(nodeID, adjNodes[1]);
+            // Else previously defined, just update word
+            } else {
+                graph[nodeID].setWord(adjNodes[1]);
             }
 
             Node curNode = graph[nodeID];
 
-            boolean skippedFirst = false;
-
             // Add all adj nodes
-            for(String adj : adjNodes){
+            for(int i = 2; i < adjNodes.length; i++){
+
+                String adj = adjNodes[i];
 
                 // get node and distance
                 int adjID = Integer.parseInt(adj.split(":")[0]);

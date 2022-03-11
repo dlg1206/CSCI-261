@@ -3,7 +3,7 @@ package ex2;
 import java.util.LinkedHashMap;
 
 /**
- * Node for Dijkstra's algorithm
+ * Node for Word ladder
  *
  * @author Derek Garcia
  **/
@@ -11,11 +11,11 @@ import java.util.LinkedHashMap;
 public class Node {
 
     private final int id;                               // node id
+    private String word;
     private final LinkedHashMap<Node, Integer> edges;   // adj list
 
-    // For Dijkstra's
-    private int distance;
-    private Integer path;
+    private int distance = -1;
+    private Integer path = null;
 
 
     /**
@@ -23,44 +23,81 @@ public class Node {
      *
      * @param id id of node
      */
-    public Node(int id ) {
+    public Node(int id, String word) {
+        this.id = id;
+        this.word = word;
+        this.edges = new LinkedHashMap<>();
+    }
+
+    public Node(int id){
         this.id = id;
         this.edges = new LinkedHashMap<>();
-
-        this.distance = -1;
-        this.path = null;
-
     }
 
-    public void addEdge(Node node, int distance ) {
-        this.edges.put(node, distance);
-    }
+    ///
+    /// Getters
+    ///
 
-    public LinkedHashMap<Node, Integer> getEdges(){
-        return this.edges;
-    }
-
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public int getDistance(){
-        return this.distance;
-    }
-
-    public void setPath(int path) {
-        this.path = path;
-    }
-
-    public int getEdgeWeight(Node otherEnd){
-        return this.edges.get(otherEnd);
-    }
-
+    // get id
     public int getId() {
         return this.id;
     }
 
+    // get edges
+    public LinkedHashMap<Node, Integer> getEdges(){
+        return this.edges;
+    }
+
+    // get distance
+    public int getDistance(){
+        return this.distance;
+    }
+
+
+    ///
+    /// Setters
+    ///
+
+    // set distance
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    // set parent
+    public void setPath(int path) {
+        this.path = path;
+    }
+
+    // set word
+    public void setWord(String word){
+        this.word = word;
+    }
+
+    ///
+    /// Methods
+    ///
+
+    /**
+     * Adds an edge to this node's adj list
+     *
+     * @param node adj node
+     * @param distance set distance / weight of edge
+     */
+    public void addEdge(Node node, int distance ) {
+        this.edges.put(node, distance);
+    }
+
+    /**
+     * Gets the distance / weight of an edge connecting an adj node
+     *
+     * @param otherEnd node on other
+     * @return distance, null if node doesn't exist
+     */
+    public int getEdgeWeight(Node otherEnd){
+        return this.edges.get(otherEnd);
+    }
+
+    // prints node correctly
     @Override
     public String toString() {
         return this.id + " dist: " + this.distance + " path: " + this.path;
