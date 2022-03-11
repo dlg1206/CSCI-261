@@ -1,3 +1,5 @@
+package ex1;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,12 +20,12 @@ public class Dijkstra {
      * @return graph
      * @throws IOException filename is bad
      */
-    private static p3Node[] parseFile(String fileName) throws IOException {
+    private static Node[] parseFile(String fileName) throws IOException {
         // Create new Buffered Reader
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         int numNodes = Integer.parseInt(br.readLine().trim());  // get number of nodes
 
-        p3Node[] graph = new p3Node[numNodes + 1];  // +1 to so nodeID == Index
+        Node[] graph = new Node[numNodes + 1];  // +1 to so nodeID == Index
 
         String line = br.readLine();    // get first node info
 
@@ -36,10 +38,10 @@ public class Dijkstra {
 
             // init node if needed
             if(graph[nodeID] == null){
-                graph[nodeID] = new p3Node(nodeID);
+                graph[nodeID] = new Node(nodeID);
             }
 
-            p3Node curNode = graph[nodeID];
+            Node curNode = graph[nodeID];
 
             boolean skippedFirst = false;
 
@@ -57,7 +59,7 @@ public class Dijkstra {
 
                 // Init adj node if needed
                 if(graph[adjID] == null){
-                    graph[adjID] =  new p3Node(adjID);
+                    graph[adjID] =  new Node(adjID);
                 }
 
                 curNode.addEdge(graph[adjID], distance);
@@ -79,14 +81,14 @@ public class Dijkstra {
      * @param source Node to start at
      * @return the resulting distance and paths
      */
-    private static HashMap<Integer, ArrayList<p3Node>> doDijkstra(p3Node[] graph, int source){
+    private static HashMap<Integer, ArrayList<Node>> doDijkstra(Node[] graph, int source){
 
         // init vars
-        LinkedList<p3Node> queue = new LinkedList<>();
-        HashMap<Integer, ArrayList<p3Node>> result = new HashMap<>();
+        LinkedList<Node> queue = new LinkedList<>();
+        HashMap<Integer, ArrayList<Node>> result = new HashMap<>();
 
         // Get and set initial node
-        p3Node curNode = graph[source];
+        Node curNode = graph[source];
         curNode.setDistance(0);
 
         // add to results
@@ -97,7 +99,7 @@ public class Dijkstra {
         for( ;; ){
 
             // Go through all od the adjacent nodes to current node
-            for(p3Node adj : curNode.getEdges().keySet()){
+            for(Node adj : curNode.getEdges().keySet()){
 
                 // Add to queue if adj hasn't been visited and not already in queue
                 if(adj.getDistance() < 0 && !queue.contains(adj)){
@@ -146,10 +148,10 @@ public class Dijkstra {
     public static void main(String[] args) throws IOException {
 
         // parse given file
-        p3Node[] graph = parseFile(args[0]);
+        Node[] graph = parseFile(args[0]);
 
         // get result
-        HashMap<Integer, ArrayList<p3Node>> result;
+        HashMap<Integer, ArrayList<Node>> result;
         if(args.length == 2){
             result = doDijkstra(graph, Integer.parseInt(args[1]));  // use given source
         } else {
@@ -163,7 +165,7 @@ public class Dijkstra {
         // go through all distances
         for(int dist : distances){
             // print each node
-            for(p3Node node : result.get(dist)){
+            for(Node node : result.get(dist)){
                 System.out.println(node);
             }
         }

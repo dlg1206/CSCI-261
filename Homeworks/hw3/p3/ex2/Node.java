@@ -1,19 +1,29 @@
+package ex2;
+
 import java.util.LinkedHashMap;
 
 /**
+ * Node for Dijkstra's algorithm
+ *
  * @author Derek Garcia
  **/
 
-public class p3Node {
+public class Node {
 
-    private final int id;
-    private final LinkedHashMap<p3Node, Integer> edges;
+    private final int id;                               // node id
+    private final LinkedHashMap<Node, Integer> edges;   // adj list
 
-
+    // For Dijkstra's
     private int distance;
     private Integer path;
 
-    public p3Node( int id ) {
+
+    /**
+     * Node Constructor. builds node
+     *
+     * @param id id of node
+     */
+    public Node(int id ) {
         this.id = id;
         this.edges = new LinkedHashMap<>();
 
@@ -22,11 +32,11 @@ public class p3Node {
 
     }
 
-    public void addEdge( p3Node node, int distance ) {
+    public void addEdge(Node node, int distance ) {
         this.edges.put(node, distance);
     }
 
-    public LinkedHashMap<p3Node, Integer> getEdges(){
+    public LinkedHashMap<Node, Integer> getEdges(){
         return this.edges;
     }
 
@@ -43,7 +53,7 @@ public class p3Node {
         this.path = path;
     }
 
-    public int getEdgeWeight(p3Node otherEnd){
+    public int getEdgeWeight(Node otherEnd){
         return this.edges.get(otherEnd);
     }
 
