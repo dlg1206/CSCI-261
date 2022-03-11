@@ -79,14 +79,14 @@ public class WordLadder {
      * @param source Node to start at
      * @return the resulting distance and paths
      */
-    private static HashMap<Integer, ArrayList<Node>> doDijkstra(Node[] graph, int source){
+    private static HashMap<Integer, ArrayList<Node>> doDijkstra(Node[] graph, Node source){
 
         // init vars
         LinkedList<Node> queue = new LinkedList<>();
         HashMap<Integer, ArrayList<Node>> result = new HashMap<>();
 
         // Get and set initial node
-        Node curNode = graph[source];
+        Node curNode = source;
         curNode.setDistance(0);
 
         // add to results
@@ -158,6 +158,17 @@ public class WordLadder {
         }
     }
 
+    private static Node getByString(Node[] graph, String word){
+       for(int i = 1; i < graph.length; i++){
+
+           if(graph[i].toString().equals(word)){
+               return graph[i];
+           }
+       }
+
+       return null;
+    }
+
 
     public static void main(String[] args) throws IOException {
         Node[] graph = parseFile(args[0]);
@@ -165,9 +176,9 @@ public class WordLadder {
         // get result
         HashMap<Integer, ArrayList<Node>> result;
         if(args.length == 2){
-            result = doDijkstra(graph, Integer.parseInt(args[1]));  // use given source
+            result = doDijkstra(graph, getByString(graph, args[1]));  // use given source
         } else {
-            result = doDijkstra(graph, 1);  // default to 1
+            result = doDijkstra(graph, graph[1]);  // default to Node 1
         }
 
         printResults(result);
