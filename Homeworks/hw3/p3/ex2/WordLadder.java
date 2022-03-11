@@ -25,7 +25,7 @@ public class WordLadder {
     private static Node[] parseFile(String fileName) throws IOException {
         // Create new Buffered Reader
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-        int numNodes = Integer.parseInt(br.readLine().trim());  // get number of nodes
+        int numNodes = Integer.parseInt(br.readLine().split(" ")[0]);  // get number of nodes
 
         Node[] graph = new Node[numNodes + 1];  // +1 to so nodeID == Index
 
@@ -75,11 +75,10 @@ public class WordLadder {
     /**
      * Completes Dijkstra Algorithm
      *
-     * @param graph Original graph to reference
      * @param source Node to start at
      * @return the resulting distance and paths
      */
-    private static HashMap<Integer, ArrayList<Node>> doDijkstra(Node[] graph, Node source){
+    private static HashMap<Integer, ArrayList<Node>> doDijkstra(Node source){
 
         // init vars
         LinkedList<Node> queue = new LinkedList<>();
@@ -158,6 +157,22 @@ public class WordLadder {
         }
     }
 
+    private static void printPath(Node source, Node dest){
+
+        int dist = 0;
+        StringBuilder path = new StringBuilder();
+        while(dest != source){
+            path.append(dest).append("<");
+            dest = dest.getParent();
+            dist++;
+        }
+        path.append(source);
+
+        System.out.println(dist +": " + path);
+
+
+    }
+
     private static Node getByString(Node[] graph, String word){
        for(int i = 1; i < graph.length; i++){
 
@@ -175,13 +190,30 @@ public class WordLadder {
 
         // get result
         HashMap<Integer, ArrayList<Node>> result;
-        if(args.length == 2){
-            result = doDijkstra(graph, getByString(graph, args[1]));  // use given source
+        if(args.length > 1){
+            Node source = getByString(graph, args[1]);
+            if(source == null){
+                System.out.println(args[1] + " was not found");
+                return;
+            }
+            result = doDijkstra(source);  // use given source
         } else {
-            result = doDijkstra(graph, graph[1]);  // default to Node 1
+            result = doDijkstra(graph[1]);  // default to Node 1
         }
 
-        printResults(result);
+        if(args.length != 3){
+            printResults(result);
+        } else {
+            Node dest = getByString(graph, args[2]);
+            if(dest == null){
+                System.out.println(args[2] + " was not found");
+                return;
+            }
+            printPath(getByString(graph, args[1]), dest);
+        }
+
+
+
 
 
     }
