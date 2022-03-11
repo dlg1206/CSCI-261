@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
+ * Uses Dijkstra's algorithm to find word ladders
+ *
  * @author Derek Garcia
  **/
 
@@ -135,6 +137,11 @@ public class WordLadder {
         return result;
     }
 
+    /**
+     * Prints all the paths that stem from the source node
+     *
+     * @param result A hashmap of distances and all nodes that are that distance away
+     */
     private static void printResults(HashMap<Integer, ArrayList<Node>> result){
 
         // sort the keys from least to greatest distance
@@ -143,54 +150,80 @@ public class WordLadder {
 
         // go through all distances
         for(int dist : distances){
-            // print each node
+
+            // For each node at distance dist
             for(Node node : result.get(dist)){
                 System.out.print(dist + ": ");
 
+                // Continue backtracking until reach source node
                 while(node.getParent() != null){
                     System.out.print(node + "<");
                     node = node.getParent();
                 }
-                System.out.println(node);
 
+                System.out.println(node);   // print source
             }
         }
     }
 
+    /**
+     * Prints a path between 2 nodes
+     *
+     * @param source node to start at
+     * @param dest destination node
+     */
     private static void printPath(Node source, Node dest){
 
-        int dist = 0;
+        int dist = 0;   // init dist is 0
+
+        // build string from dest back to source
         StringBuilder path = new StringBuilder();
         while(dest != source){
             path.append(dest).append("<");
             dest = dest.getParent();
             dist++;
         }
-        path.append(source);
 
+        path.append(source);    // add source
+
+        // print full string
         System.out.println(dist +": " + path);
-
-
     }
 
+    /**
+     * Looks through graph to get a node with the given word
+     *
+     * @param graph graph to search through
+     * @param word word to find node of
+     * @return Node if exists, null otherwise
+     */
     private static Node getByString(Node[] graph, String word){
-       for(int i = 1; i < graph.length; i++){
-
+        // search through graph
+        for(int i = 1; i < graph.length; i++){
+           // check if word equal
            if(graph[i].toString().equals(word)){
                return graph[i];
            }
-       }
-
-       return null;
+        }
+        // no node was found
+        return null;
     }
 
 
+    /**
+     * Runs WordLadder
+     * @param args [filename] [source] [destination (optional)]
+     * @throws IOException filename is bad
+     */
     public static void main(String[] args) throws IOException {
+
+        // Make graph
         Node[] graph = parseFile(args[0]);
 
         // get result
         HashMap<Integer, ArrayList<Node>> result;
         if(args.length > 1){
+            // validate source exists
             Node source = getByString(graph, args[1]);
             if(source == null){
                 System.out.println(args[1] + " was not found");
@@ -201,20 +234,18 @@ public class WordLadder {
             result = doDijkstra(graph[1]);  // default to Node 1
         }
 
+        // print full if no destination given
         if(args.length != 3){
             printResults(result);
         } else {
+            // validate destination exists
             Node dest = getByString(graph, args[2]);
             if(dest == null){
                 System.out.println(args[2] + " was not found");
                 return;
             }
+            // print specific path
             printPath(getByString(graph, args[1]), dest);
         }
-
-
-
-
-
     }
 }
