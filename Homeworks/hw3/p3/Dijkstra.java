@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.util.*;
 
 /**
-
+Dijkstra's algorithm
 
 @author Derek Garcia
 **/
 
 public class Dijkstra {
-
 
     /**
      * Parses input file to create a graph of given values
@@ -52,6 +51,7 @@ public class Dijkstra {
                     continue;
                 }
 
+                // get node and distance
                 int adjID = Integer.parseInt(adj.split(":")[0]);
                 int distance = Integer.parseInt(adj.split(":")[1]);
 
@@ -72,86 +72,100 @@ public class Dijkstra {
     }
 
 
+    /**
+     * Completes Dijkstra Algorithm
+     *
+     * @param graph Original graph to reference
+     * @param source Node to start at
+     * @return the resulting distance and paths
+     */
     private static HashMap<Integer, ArrayList<p3Node>> doDijkstra(p3Node[] graph, int source){
-        LinkedList<p3Node> queue = new LinkedList<>();
 
+        // init vars
+        LinkedList<p3Node> queue = new LinkedList<>();
         HashMap<Integer, ArrayList<p3Node>> result = new HashMap<>();
 
-
+        // Get and set initial node
         p3Node curNode = graph[source];
         curNode.setDistance(0);
 
+        // add to results
         result.put(0, new ArrayList<>());
         result.get(0).add(curNode);
 
+        // Repeat until nothing is left in the queue
         for( ;; ){
 
-
+            // Go through all od the adjacent nodes to current node
             for(p3Node adj : curNode.getEdges().keySet()){
 
-
-
+                // Add to queue if adj hasn't been visited and not already in queue
                 if(adj.getDistance() < 0 && !queue.contains(adj)){
                     queue.add(adj);
-
-
                 }
 
-                int newDist = curNode.getDistance() + curNode.getEdgeWeight(adj);
+                int newDist = curNode.getDistance() + curNode.getEdgeWeight(adj);   // calculate new distance
 
+                // If distance hasn't been set or the new distance is better
                 if(adj.getDistance() < 0 || adj.getDistance() > newDist){
 
-                    if(!result.containsKey(newDist)){
-
+                    // make new key if needed
+                    if(!result.containsKey(newDist))
                         result.put(newDist, new ArrayList<>());
-                    }
 
-                    if(adj.getDistance() >= 0){
-
+                    // if improving distance, remove from old distance
+                    if(adj.getDistance() >= 0)
                         result.get(adj.getDistance()).remove(adj);
-                    }
 
-
-
+                    // Update values
                     adj.setDistance(newDist);
-
-                    result.get(newDist).add(adj);
                     adj.setPath(curNode.getId());
 
+                    // update result
+                    result.get(newDist).add(adj);
                 }
             }
 
+            // End if queue is empty, else get next node
             if(queue.isEmpty()){
                 break;
             } else {
                 curNode = queue.pop();
             }
         }
-
         return result;
     }
 
 
+    /**
+     * Takes in a file and optional source node to perform dijkstra's algorithm
+     *
+     * @param args [filename, source]
+     * @throws IOException given filename is bad
+     */
     public static void main(String[] args) throws IOException {
+
+        // parse given file
         p3Node[] graph = parseFile(args[0]);
 
-
+        // get result
         HashMap<Integer, ArrayList<p3Node>> result;
         if(args.length == 2){
-            result = doDijkstra(graph, Integer.parseInt(args[1]));
+            result = doDijkstra(graph, Integer.parseInt(args[1]));  // use given source
         } else {
-            result = doDijkstra(graph, 1);
+            result = doDijkstra(graph, 1);  // default to 1
         }
 
+        // sort the keys from least to greatest distance
         ArrayList<Integer> distances = new ArrayList<>(result.keySet());
         Collections.sort(distances);
-        for(int dist : distances){
 
+        // go through all distances
+        for(int dist : distances){
+            // print each node
             for(p3Node node : result.get(dist)){
                 System.out.println(node);
             }
-
         }
-
     }
 }
