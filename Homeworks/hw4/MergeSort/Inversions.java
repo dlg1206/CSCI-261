@@ -62,13 +62,13 @@ public class Inversions {
         while(iA < A.length && iB < B.length){
 
             // if left head < right head, insert left at location
-            if( parent[start + iA] < parent[(mid + 1) + iB]){
+            if( A[iA] < B[iB]){
                 parent[iP++] = A[iA++];
 
             // else insert the right at location
             } else {
                 parent[iP++] = B[iB++];
-                numInversions += mid - iA;
+                numInversions += A.length - iA;
             }
         }
 
@@ -113,12 +113,12 @@ public class Inversions {
 
     public static long inversions(int [] a){
 
-        int[] b = {6, 5, 12, 10, 9, 1};
-        sortAndCount(b, 0, b.length - 1);
-
-        for(int i : b){
-            System.out.println(i);
-        }
-        return 0;
+//        int[] b = {6, 5, 12, 10, 9, 1};
+//        sortAndCount(b, 0, b.length - 1);
+//
+//        for(int i : b){
+//            System.out.println(i);
+//        }
+        return sortAndCount(a, 0, a.length - 1);
     }
 }
