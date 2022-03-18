@@ -52,32 +52,35 @@ public class Inversions {
         int[] A = copyRange(parent, start, mid);
         int[] B = copyRange(parent, mid + 1, end);
 
-        int iA = start;
-        int iB = mid + 1;
+        int iP = start;
+
+        int iA = 0, iB =  0;
 
         long numInversions = 0;
+
         // Repeat until exhaust one or both of the left and right arrays
-        while(!left.isEmpty() && !right.isEmpty()){
+        while(iA < A.length && iB < B.length){
 
             // if left head < right head, insert left at location
-            if( left.getFirst() < right.getFirst() ){
-                a[lStart++] = left.pop();
+            if( parent[start + iA] < parent[(mid + 1) + iB]){
+                parent[iP++] = A[iA++];
 
             // else insert the right at location
             } else {
-                a[lStart++] = right.pop();
-                numInversions += left.size();
+                parent[iP++] = B[iB++];
+                numInversions += mid - iA;
             }
         }
 
-        // flush left
-        while(!left.isEmpty()){
-            a[lStart++] = left.pop();
-        }
 
-        // flush right
-        while(!right.isEmpty()){
-            a[lStart++] = right.pop();
+        while(iA < A.length || iB < B.length){
+
+            if(iA < A.length)
+                parent[iP++] = A[iA++];
+
+            if(iB < B.length)
+                parent[iP++] = B[iB++];
+
         }
 
         return numInversions;
@@ -109,6 +112,13 @@ public class Inversions {
 
 
     public static long inversions(int [] a){
-        return sortAndCount(a, 0, a.length - 1);
+
+        int[] b = {6, 5, 12, 10, 9, 1};
+        sortAndCount(b, 0, b.length - 1);
+
+        for(int i : b){
+            System.out.println(i);
+        }
+        return 0;
     }
 }
