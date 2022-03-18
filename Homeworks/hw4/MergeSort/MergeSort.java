@@ -40,7 +40,7 @@ public class MergeSort {
 	 * @param lStart the index of the leftmost value in the current block
 	 * @param rEnd the index of the rightmost value in the current block
 	 */
-	public static void split(int[] a, int lStart, int rEnd){
+	private static void split(int[] a, int lStart, int rEnd){
 
 		// Split if possible ( lStart == rEnd means only 1 value, which is base case )
 		if(lStart != rEnd){
