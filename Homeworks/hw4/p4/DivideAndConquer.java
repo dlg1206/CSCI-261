@@ -2,48 +2,58 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * Uses a recursive divide and conquer method to find
+ * closet pair in O(n log n)
+ *
  * @author Derek Garcia
  **/
 
 public class DivideAndConquer extends ClosestPairAlg{
 
-
+    // Enums for sorting
     private enum Coordinate{
         X,
         Y
     }
 
-    private Point[] sortBy(Point[] P, Coordinate coord){
+    /**
+     * Sorts given array by X or Y coordinate value
+     *
+     * @param P array to sort
+     * @param coordinate X or Y to sort by
+     */
+    private static void sortBy(Point[] P, Coordinate coordinate){
+        // init counting var
         int i = 0;
 
-        if(coord == Coordinate.X){
-            Pointx[] x = new Pointx[P.length];
-
-
-            for(Point p : P){
-                x[i++] = new Pointx(p.x, p.y);
+        // Convert Point to Pointx
+        if (coordinate == Coordinate.X) {
+            for (Point p : P) {
+                P[i++] = new Pointx(p.x, p.y);
             }
 
-            Arrays.sort(x);
-
-            return x;
-        } else {
-            Pointy[] y = new Pointy[P.length];
-
-            for(Point p : P){
-                y[i++] = new Pointy(p.x, p.y);
+        // else convert to Pointy
+        }else{
+            for (Point p : P) {
+                P[i++] = new Pointy(p.x, p.y);
             }
-
-            Arrays.sort(y);
-
-            return y;
         }
 
+        // Sort by X or Y coordinate
+        Arrays.sort(P);
     }
 
-
-
+    /**
+     * Removes all points with a distance greater from the middle
+     * point and the distance given
+     *
+     * @param P array to truncate
+     * @param dist distance to from middle
+     * @return truncated P
+     */
     private Point[] truncate(Point[] P, double dist){
+
+        // get bounds
         double min = P[P.length / 2].x - dist ;
         double max = P[P.length / 2].x + dist ;
 
@@ -66,12 +76,13 @@ public class DivideAndConquer extends ClosestPairAlg{
             return new BruteForce().closestPair(P);
         }
 
-        P = sortBy(P, Coordinate.X);
+        sortBy(P, Coordinate.X);
 
         int midI = (P.length / 2) - 1;
 
         Point[] leftP = new Point[midI + 1];
         Point[] rightP = new Point[P.length - midI - 1];
+
 
         int leftI = 0, rightI = 0;
         for (Point p : P) {
@@ -95,7 +106,7 @@ public class DivideAndConquer extends ClosestPairAlg{
 
         P = truncate(P, closestPair.dist);
 
-        P = sortBy(P, Coordinate.Y);
+        sortBy(P, Coordinate.Y);
 
         for(int i = 0; i < P.length / 2; i++){
 
