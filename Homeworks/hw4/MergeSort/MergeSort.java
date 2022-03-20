@@ -129,8 +129,5 @@ public class MergeSort {
     public static void mergeSort(int [] a) {
 		split(a, 0, a.length - 1);
     }
-
-
-
 }
 
