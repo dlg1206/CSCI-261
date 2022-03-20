@@ -1,4 +1,5 @@
 /**
+ * Brute force method of finding a closest pair
  * @author Derek Garcia
  **/
 
