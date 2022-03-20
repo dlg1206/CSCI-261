@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -5,6 +6,8 @@ import java.util.LinkedList;
  **/
 
 public class Inversions {
+
+
 
     /**
      * Recursive divide for merge sort. Divides to get single numbers then merges the results
@@ -19,7 +22,8 @@ public class Inversions {
         long rA = 0, rB = 0, r = 0;
 
         // Split if possible ( lStart == rEnd means only 1 value, which is base case )
-        if(start != end){
+        if(start < end) {
+
             // Find the middle of the block
             int middle = (start + end) / 2;	// int division always round down
 
@@ -50,25 +54,36 @@ public class Inversions {
 
         // convert ranges to arrays
         int[] A = copyRange(parent, start, mid);
+
+        if(!Arrays.equals(A, Arrays.copyOfRange(parent, start, mid + 1))){
+            System.out.println("a !=");
+        }
+
         int[] B = copyRange(parent, mid + 1, end);
+
+        if(!Arrays.equals(B, Arrays.copyOfRange(parent, mid + 1, end + 1))){
+            System.out.println("b !=");
+        }
 
         int iP = start;
 
         int iA = 0, iB =  0;
 
-        long numInversions = 0;
+        long inversions = 0;
 
         // Repeat until exhaust one or both of the left and right arrays
         while(iA < A.length && iB < B.length){
-
+            int lenA = A.length - iA;
             // if left head < right head, insert left at location
-            if( A[iA] < B[iB]){
+            if( A[iA] <= B[iB]){
                 parent[iP++] = A[iA++];
 
             // else insert the right at location
             } else {
                 parent[iP++] = B[iB++];
-                numInversions += A.length - iA;
+                inversions += (mid + 1) - (start + iA);
+
+                int b = 9;
             }
         }
 
@@ -83,7 +98,8 @@ public class Inversions {
 
         }
 
-        return numInversions;
+        return inversions;
+
     }
 
 
@@ -113,12 +129,6 @@ public class Inversions {
 
     public static long inversions(int [] a){
 
-        int[] b = {6, 5, 12, 10, 9, 1};
-        sortAndCount(b, 0, b.length - 1);
-
-        for(int i : b){
-            System.out.println(i);
-        }
         return sortAndCount(a, 0, a.length - 1);
     }
 }
