@@ -7,10 +7,6 @@ import java.util.Arrays;
 
 public class DivideAndConquer extends ClosestPairAlg{
 
-    private enum Side{
-        LEFT,
-        RIGHT
-    }
 
     private enum Coordinate{
         X,
@@ -45,25 +41,7 @@ public class DivideAndConquer extends ClosestPairAlg{
 
     }
 
-    private Point[] getSide(Point[] p, Side side){
-        int mid = p.length / 2;
 
-        int length, pIndex;
-        if(side == Side.LEFT){
-            length = mid;
-            pIndex = 0;
-        } else {
-            length = p.length - mid;
-            pIndex = mid;
-        }
-        Point[] result = new Point[length];
-
-        for(int i = 0; i < length; i++){
-            result[i] = p[pIndex++];
-        }
-
-        return result;
-    }
 
     private Point[] truncate(Point[] P, double dist){
         double min = P[P.length / 2].x - dist ;
@@ -90,8 +68,22 @@ public class DivideAndConquer extends ClosestPairAlg{
 
         P = sortBy(P, Coordinate.X);
 
-        Triple left = closestPair(getSide(P, Side.LEFT));
-        Triple right = closestPair(getSide(P, Side.RIGHT));
+        int midI = (P.length / 2) - 1;
+
+        Point[] leftP = new Point[midI + 1];
+        Point[] rightP = new Point[P.length - midI - 1];
+
+        int leftI = 0, rightI = 0;
+        for (Point p : P) {
+            if (p.x <= P[midI].x) {
+                leftP[leftI++] = p;
+            } else {
+                rightP[rightI++] = p;
+            }
+        }
+
+        Triple left = closestPair(leftP);
+        Triple right = closestPair(rightP);
 
         Triple closestPair;
 
