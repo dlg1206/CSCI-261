@@ -1,3 +1,5 @@
+package Ex1;	// TODO REMOVE THIS
+
 import java.util.*;
 import java.io.*;
 
@@ -61,7 +63,8 @@ public class WeightedInterval {
      */
     public static int [] prior(Job[] jobs) {
 
-        // FINISH ME
+
+
 	return null;
     }
 

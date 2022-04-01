@@ -1,3 +1,5 @@
+package Ex1;    // TODO REMOVE THIS
+
 public  class Job implements Comparable {
 
     public int number;
