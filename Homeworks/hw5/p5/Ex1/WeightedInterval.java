@@ -56,16 +56,18 @@ public class WeightedInterval {
 
 
     /**
-     *
      * @ param jobs a list of jobs sorted by finish time
      * @ return int [] p, p[j] is the first job to the left of jobs[j]
      *                    that is compatible with jobs[j]
      */
     public static int [] prior(Job[] jobs) {
 
+		int[] compatible = new int[jobs.length];
 
 
-	return null;
+
+
+		return null;
     }
 
     
