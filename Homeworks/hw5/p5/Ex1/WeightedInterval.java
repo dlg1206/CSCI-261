@@ -61,7 +61,7 @@ public class WeightedInterval {
      *                    that is compatible with jobs[j]
      */
     public static int [] prior(Job[] jobs) {
-		// todo comment this
+//		// todo comment this
 		ArrayList<Job> earliestStart = new ArrayList<>();
 		Job[] numeric = new Job[jobs.length];
 
@@ -80,18 +80,36 @@ public class WeightedInterval {
 
 
 
-		for(Job job : numeric){
-			if(job != null){
-				for(int i = job.number - 1; i > 0; i--){
-					if(job.start >= numeric[i].finish && job.number > numeric[i].number){
-						compatible[job.number] = numeric[i].number;
-					}
-					if(job.start - numeric[i].finish == 0)
-						break;
+		for(int jobIndex = jobs.length - 1; jobIndex > 0; jobIndex--){
+
+			for(int i = jobIndex - 1; i > 0; i--){
+
+				if( jobs[i].finish <= jobs[i-1].start /*&& job.number > numeric[i].number*/){
+					compatible[jobIndex] = i;
+					break;
 				}
+//					if(job.start - numeric[i].finish == 0)
+//						break;
 			}
 
+
 		}
+//		int[] compatible = new int[jobs.length];
+//
+//
+//		for(int i = jobs.length - 1; i > 0; i--){
+//				Job curJob = jobs[i];
+//				for(int otherJob = curJob.number - 1; otherJob > 0; otherJob--){
+//
+//					if (jobs[otherJob].finish <= jobs[curJob.number - 1].start){
+//						compatible[curJob.number] = otherJob;
+//						break;
+//					}
+////
+//				}
+//
+//
+//		}
 
 		return compatible;
     }
@@ -140,7 +158,33 @@ public class WeightedInterval {
 		int j = p[p.length - 1];
 		if(j == 0)
 			return 0;
-//		if()
+
+		if(M == null){
+			M = new int[jobs.length + 1];
+			for(int i = 1; i < M.length; i++){
+				M[i] = -1;
+			}
+		}
+
+
+
+		Job curJob = null;
+		for(Job job : jobs){
+			curJob = job;
+			if(job != null && job.number == j){
+				break;
+			}
+
+		}
+		assert curJob != null;
+		if(M[j] < 0) {
+
+//			M[j] = Math.max(curJob.weight +optMem())
+		}
+
+		if(curJob.weight + M[p[j]] > M[j-1]){
+
+		}
 
 		return 0;
     }

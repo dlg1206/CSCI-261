@@ -1,3 +1,5 @@
+package Ex2;	// todo REMOVE
+
 import java.util.*;
 import java.io.*;
 
