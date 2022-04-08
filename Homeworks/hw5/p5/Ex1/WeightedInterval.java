@@ -61,7 +61,7 @@ public class WeightedInterval {
      *                    that is compatible with jobs[j]
      */
     public static int [] prior(Job[] jobs) {
-		
+		// todo comment this
 		ArrayList<Job> earliestStart = new ArrayList<>();
 
 		int startTime = 0;
@@ -75,13 +75,13 @@ public class WeightedInterval {
 		int[] compatible = new int[jobs.length];
 
 		int previous = 0;
-		for(int i = 1; i < jobs.length; i++){
+		while(!earliestStart.isEmpty()){
 
 			Job curJob = earliestStart.remove(0);
 			if(curJob.start >= jobs[previous + 1].finish){
-				compatible[i] = ++previous;
+				compatible[curJob.number] = ++previous;
 			} else {
-				compatible[i] = previous;
+				compatible[curJob.number] = previous;
 			}
 
 		}
@@ -100,8 +100,19 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */
     public static int optR(Job[] jobs, int[] p, int j) {
-	// todo FINISH ME
-		return 0;
+	// todo comment
+		if(j == 0){
+			return 0;
+		}
+
+		int foo = p[j];
+		int [] compatibleJobs = Arrays.copyOf(p, jobs[p[j]].number);
+
+		int inclusive = jobs[j].weight + optR(jobs, compatibleJobs, jobs[p[j]].number - 1);
+		int exclusive = optR(jobs, compatibleJobs, j - 1);
+
+		return Math.max(inclusive, exclusive);
+
     }
 
     /**
