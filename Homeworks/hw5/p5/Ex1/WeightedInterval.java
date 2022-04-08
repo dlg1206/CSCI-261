@@ -111,11 +111,20 @@ public class WeightedInterval {
 		if(j == 0){
 			return 0;
 		}
-		System.out.println("j: " + j);
-		int inclusive = jobs[j].weight + optR(jobs, p, p[j]);
-		System.out.println("icnl: " + inclusive);
+
+		Job curJob = null;
+		for(Job job : jobs){
+			curJob = job;
+			if(job != null && job.number == j){
+				break;
+			}
+
+		}
+		assert curJob != null;
+		int inclusive = curJob.weight + optR(jobs, p, p[j]);
+
 		int exclusive = optR(jobs, p, j - 1);
-		System.out.println("ex: " + exclusive);
+
 		return Math.max(inclusive, exclusive);
 
     }
@@ -128,10 +137,11 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */    
     public static int optMem(Job[] jobs, int[] p) {
-		int j = jobs[0].number;
+		int j = p[p.length - 1];
 		if(j == 0)
 			return 0;
-		else if()
+//		if()
+
 		return 0;
     }
 
