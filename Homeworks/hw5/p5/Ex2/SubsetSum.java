@@ -43,8 +43,31 @@ public class SubsetSum{
      */
     public static int subsetSumMem(int [] itemWts, int W) {
         M = new int [itemWts.length][W+1];
-	// FINISH ME
-	return 0;
+
+		for(int row = 0; row < itemWts.length; row++){
+			int curWeight = itemWts[row];
+
+			for(int col = 0; col < W + 1; col++){
+				if(col < curWeight){
+					M[row][col] = M[row][col];
+				} else {
+					M[row][col] = Math.max(M[row][col], curWeight + M[row][col - curWeight]);
+				}
+
+			}
+
+			System.out.println(M[row]);
+		}
+
+		for(int r = itemWts.length - 1; r >= 0; r--){
+
+			for(int c = 0; c < W+1; c++){
+				System.out.print(M[r][c] + " ");
+			}
+			System.out.println();
+		}
+
+		return M[itemWts.length - 1][W];
 
     }
 

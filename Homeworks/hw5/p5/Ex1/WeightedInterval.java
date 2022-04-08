@@ -143,7 +143,6 @@ public class WeightedInterval {
 		}
 
 
-
 		Job curJob = null;
 		for(Job job : jobs){
 			curJob = job;
