@@ -74,8 +74,17 @@ public class SubsetSum{
      */
     public static int subsetSumR(int [] itemWts, int w, int i) {
 
-	// FINISH ME
-	return 0;
+		if(i == 0)
+			return 0;
+
+		if(w < itemWts[i]){
+			return subsetSumR(itemWts, w, i - 1);
+		} else {
+			return Math.max(
+					subsetSumR(itemWts, w, i - 1),
+					itemWts[i] + subsetSumR(itemWts, w - itemWts[i], i - 1)
+					);
+		}
     }
 
     /**
