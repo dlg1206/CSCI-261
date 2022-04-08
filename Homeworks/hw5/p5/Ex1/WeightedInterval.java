@@ -81,8 +81,8 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */
     public static int optR(Job[] jobs, int[] p, int j) {
-	// FINISH ME
-	return 0;
+	// todo FINISH ME
+		return 0;
     }
 
     /**
@@ -93,8 +93,8 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */    
     public static int optMem(Job[] jobs, int[] p) {
-	// FINISH ME
-	return 0;
+	// todo FINISH ME
+		return 0;
     }
 
 
@@ -105,8 +105,9 @@ public class WeightedInterval {
     }
 
     public static void showSolution(Job[] jobs, int [] p, int j) {
-	// FINISH ME
-	return;
+
+		// todo finish
+		return;
     }    
 
 }
