@@ -35,13 +35,13 @@ class GFG
         for (int j = i - 1; j >= 0; j--)
         {
             if (arr[j].finish <= arr[i - 1].start){
-                System.out.println("p(" + arr[i-1] +"): " + arr[j]);
+//                System.out.println("p(" + arr[i-1] +"): " + arr[j]);
                 compat[arr[i-1].ID] = arr[j].ID;
                 return j;
             }
 
         }
-        System.out.println("p(" + arr[i-1] +"): 0");
+//        System.out.println("p(" + arr[i-1] +"): 0");
         return -1;
     }
 

@@ -95,24 +95,31 @@ public class WeightedInterval {
      */
     public static int optR(Job[] jobs, int[] p, int j) {
 	// todo comment
-		if(j == 0){
-			return 0;
-		}
+		return 0;
 
-		Job curJob = null;
-		for(Job job : jobs){
-			curJob = job;
-			if(job != null && job.number == j){
-				break;
-			}
-
-		}
-		assert curJob != null;
-		int inclusive = curJob.weight + optR(jobs, p, p[j]);
-
-		int exclusive = optR(jobs, p, j - 1);
-
-		return Math.max(inclusive, exclusive);
+//		System.out.println("Current: " + j);
+//		if(j == 0){
+//			return 0;
+//		}
+//
+//		int inclusive = 0;
+//		int index = 0;
+//
+//		for(Job job : jobs){
+//			if(job != null && job.number == j){
+//				inclusive = job.weight;
+//			}
+//
+//		}
+//
+////		if(p[j] != 0)
+//		System.out.println("inclusive, heading to: " + p[j]);
+//			inclusive += optR(jobs, p, p[j]);
+//		System.out.println("exclusive, heading to: " + (j - 1));
+//		int exclusive = optR(jobs, p, j - 1);
+//
+//
+//		return Math.max(inclusive, exclusive);
 
     }
 
