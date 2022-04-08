@@ -97,7 +97,13 @@ public class SubsetSum{
      *                    that is compatible with jobs[j]
      */
     public static void showSolution(int [] itemWts, int w, int i) {
-	// FINISH ME
+
+		for(int n = i; n > 0; n--){
+			if(w - itemWts[n] > 0){
+				w = w - itemWts[n];
+				System.out.println("item " + n + " wt: " + itemWts[n]);
+			}
+		}
     }
     
 }
