@@ -61,13 +61,32 @@ public class WeightedInterval {
      *                    that is compatible with jobs[j]
      */
     public static int [] prior(Job[] jobs) {
+		
+		ArrayList<Job> earliestStart = new ArrayList<>();
 
+		int startTime = 0;
+		while(earliestStart.size() != jobs.length - 1){
+			for(Job job : jobs){
+				if(job != null && !earliestStart.contains(job) && job.start <= startTime)
+					earliestStart.add(job);
+			}
+			startTime++;
+		}
 		int[] compatible = new int[jobs.length];
 
+		int previous = 0;
+		for(int i = 1; i < jobs.length; i++){
 
+			Job curJob = earliestStart.remove(0);
+			if(curJob.start >= jobs[previous + 1].finish){
+				compatible[i] = ++previous;
+			} else {
+				compatible[i] = previous;
+			}
 
+		}
 
-		return null;
+		return compatible;
     }
 
     
