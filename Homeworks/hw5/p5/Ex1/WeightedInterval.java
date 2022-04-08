@@ -63,37 +63,35 @@ public class WeightedInterval {
     public static int [] prior(Job[] jobs) {
 		// todo comment this
 		ArrayList<Job> earliestStart = new ArrayList<>();
+		Job[] numeric = new Job[jobs.length];
 
 		int startTime = 0;
 		while(earliestStart.size() != jobs.length - 1){
 			for(Job job : jobs){
-				if(job != null && !earliestStart.contains(job) && job.start <= startTime)
+				if(job != null && !earliestStart.contains(job) && job.start <= startTime){
 					earliestStart.add(job);
+					numeric[job.number] = job;
+				}
+
 			}
 			startTime++;
 		}
 		int[] compatible = new int[jobs.length];
 
-		for(int i = 1; i < jobs.length; i++){
 
-			for(Job other : earliestStart){
-				if(other.start >= jobs[i].finish)
-					compatible[other.number] = jobs[i].number;
+
+		for(Job job : numeric){
+			if(job != null){
+				for(int i = job.number - 1; i > 0; i--){
+					if(job.start >= numeric[i].finish && job.number > numeric[i].number){
+						compatible[job.number] = numeric[i].number;
+					}
+					if(job.start - numeric[i].finish == 0)
+						break;
+				}
 			}
-		}
-//
-//		int previous = 0;
-//		while (!earliestStart.isEmpty()){
-//			Job curJob = earliestStart.remove(0);
-//
-//			if(curJob.start >= jobs[previous + 1].finish){
-//				compatible[curJob.number] = jobs[previous++ + 1].number;
-//
-//			} else if(previous != 0){
-//				compatible[curJob.number] = jobs[previous + 1].number;
-//			}
-//		}
 
+		}
 
 		return compatible;
     }
@@ -130,7 +128,7 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */    
     public static int optMem(Job[] jobs, int[] p) {
-	// todo FINISH ME
+
 		return 0;
     }
 
