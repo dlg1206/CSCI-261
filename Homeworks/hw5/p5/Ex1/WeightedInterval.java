@@ -74,16 +74,12 @@ public class WeightedInterval {
 		}
 		int[] compatible = new int[jobs.length];
 
-		int previous = 0;
-		while(!earliestStart.isEmpty()){
+		for(int i = 1; i < jobs.length; i++){
 
-			Job curJob = earliestStart.remove(0);
-			if(curJob.start >= jobs[previous + 1].finish){
-				compatible[curJob.number] = ++previous;
-			} else {
-				compatible[curJob.number] = previous;
+			for(Job other : earliestStart){
+				if(other.start >= jobs[i].finish)
+					compatible[other.number] = jobs[i].number;
 			}
-
 		}
 
 		return compatible;
@@ -105,11 +101,15 @@ public class WeightedInterval {
 			return 0;
 		}
 
-		int foo = p[j];
-		int [] compatibleJobs = Arrays.copyOf(p, jobs[p[j]].number);
+		int newJ;
+		if(jobs[p[j]] == null){
+			newJ = 0;
+		} else {
+			newJ = jobs[p[j]].number;
+		}
 
-		int inclusive = jobs[j].weight + optR(jobs, compatibleJobs, jobs[p[j]].number - 1);
-		int exclusive = optR(jobs, compatibleJobs, j - 1);
+		int inclusive = jobs[j].weight + optR(jobs, p, newJ);
+		int exclusive = optR(jobs, p, j - 1);
 
 		return Math.max(inclusive, exclusive);
 
