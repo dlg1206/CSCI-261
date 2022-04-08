@@ -62,54 +62,23 @@ public class WeightedInterval {
      */
     public static int [] prior(Job[] jobs) {
 //		// todo comment this
-		ArrayList<Job> earliestStart = new ArrayList<>();
-		Job[] numeric = new Job[jobs.length];
 
-		int startTime = 0;
-		while(earliestStart.size() != jobs.length - 1){
-			for(Job job : jobs){
-				if(job != null && !earliestStart.contains(job) && job.start <= startTime){
-					earliestStart.add(job);
-					numeric[job.number] = job;
-				}
-
-			}
-			startTime++;
-		}
 		int[] compatible = new int[jobs.length];
 
+		for(int i = jobs.length - 1; i > 0; i--){
 
+			for(int j = i - 1; j > 0; j--){
 
-		for(int jobIndex = jobs.length - 1; jobIndex > 0; jobIndex--){
-
-			for(int i = jobIndex - 1; i > 0; i--){
-
-				if( jobs[i].finish <= jobs[i-1].start /*&& job.number > numeric[i].number*/){
-					compatible[jobIndex] = i;
+				if( jobs[j].finish <= jobs[i].start){
+					compatible[jobs[i].number] = jobs[j].number;
 					break;
 				}
-//					if(job.start - numeric[i].finish == 0)
-//						break;
+
 			}
 
 
+
 		}
-//		int[] compatible = new int[jobs.length];
-//
-//
-//		for(int i = jobs.length - 1; i > 0; i--){
-//				Job curJob = jobs[i];
-//				for(int otherJob = curJob.number - 1; otherJob > 0; otherJob--){
-//
-//					if (jobs[otherJob].finish <= jobs[curJob.number - 1].start){
-//						compatible[curJob.number] = otherJob;
-//						break;
-//					}
-////
-//				}
-//
-//
-//		}
 
 		return compatible;
     }

@@ -19,18 +19,29 @@ class GFG
             this.finish = finish;
             this.profit = profit;
         }
+
+        @Override
+        public String toString() {
+            return Integer.toString(ID);
+        }
     }
 
     // Find the latest job (in sorted array) that doesn't
 // conflict with the job[i]. If there is no compatible job,
 // then it returns -1.
+    static int[] compat = new int[21];
     static int latestNonConflict(Job arr[], int i)
     {
         for (int j = i - 1; j >= 0; j--)
         {
-            if (arr[j].finish <= arr[i - 1].start)
+            if (arr[j].finish <= arr[i - 1].start){
+                System.out.println("p(" + arr[i-1] +"): " + arr[j]);
+                compat[arr[i-1].ID] = arr[j].ID;
                 return j;
+            }
+
         }
+        System.out.println("p(" + arr[i-1] +"): 0");
         return -1;
     }
 
@@ -77,6 +88,7 @@ class GFG
 
         return findMaxProfitRec(arr, n);
     }
+
 
     // Driver program
     public static void main(String args[])
