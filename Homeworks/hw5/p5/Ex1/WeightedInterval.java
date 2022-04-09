@@ -1,3 +1,9 @@
+/**
+ * WeightedInterval.java
+ *
+ * @author Derek Garcia
+ */
+
 package Ex1;	// TODO REMOVE THIS
 
 import java.util.*;

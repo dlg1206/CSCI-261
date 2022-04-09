@@ -1,3 +1,9 @@
+/**
+ * SubsetSum.java
+ *
+ * @author Derek Garcia
+ */
+
 package Ex2;	// todo REMOVE
 
 import java.util.*;
