@@ -63,24 +63,49 @@ public class WeightedInterval {
     public static int [] prior(Job[] jobs) {
 //		// todo comment this
 
-		int[] compatible = new int[jobs.length];
+//		int[] compatible = new int[jobs.length];
+//
+//		for(int i = jobs.length - 1; i > 0; i--){
+//
+//			for(int j = i - 1; j > 0; j--){
+//
+//				if( jobs[j].finish <= jobs[i].start){
+//					compatible[jobs[i].number] = jobs[j].number;
+//					break;
+//				}
+//
+//			}
+//		}
+		ArrayList<Job> earliestStart = new ArrayList<>();
+		Job[] numeric = new Job[jobs.length];
 
-		for(int i = jobs.length - 1; i > 0; i--){
+		int startTime = 0;
+		while(earliestStart.size() != jobs.length - 1){
+			for(Job job : jobs){
 
-			for(int j = i - 1; j > 0; j--){
-
-				if( jobs[j].finish <= jobs[i].start){
-					compatible[jobs[i].number] = jobs[j].number;
-					break;
-				}
+					if(job != null && !earliestStart.contains(job) && job.start <= startTime){
+						earliestStart.add(job);
+						numeric[job.number] = job;
+					}
 
 			}
-
-
-
+			startTime++;
 		}
 
+		int[] compatible = new int[jobs.length];
+		for(Job job : numeric) {
+			if (job != null) {
+				for (int i = job.number - 1; i > 0; i--) {
+					if (job.start >= numeric[i].finish && job.number > numeric[i].number) {
+						compatible[job.number] = numeric[i].number;
+					}
+					if (job.start - numeric[i].finish == 0)
+						break;
+				}
+			}
+		}
 		return compatible;
+
     }
 
     
@@ -95,31 +120,21 @@ public class WeightedInterval {
      */
     public static int optR(Job[] jobs, int[] p, int j) {
 	// todo comment
-		return 0;
 
-//		System.out.println("Current: " + j);
-//		if(j == 0){
-//			return 0;
-//		}
-//
-//		int inclusive = 0;
-//		int index = 0;
-//
-//		for(Job job : jobs){
-//			if(job != null && job.number == j){
-//				inclusive = job.weight;
-//			}
-//
-//		}
-//
-////		if(p[j] != 0)
-//		System.out.println("inclusive, heading to: " + p[j]);
-//			inclusive += optR(jobs, p, p[j]);
-//		System.out.println("exclusive, heading to: " + (j - 1));
-//		int exclusive = optR(jobs, p, j - 1);
-//
-//
-//		return Math.max(inclusive, exclusive);
+		if(j == 0){
+			return 0;
+		}
+		Job curJob = null;
+		for(Job job : jobs){
+			curJob = job;
+			if(job != null && job.number == j){
+				break;
+			}
+		}
+		assert curJob != null;
+		int inclusive = curJob.weight + optR(jobs, p, p[j]);
+		int exclusive = optR(jobs, p, j - 1);
+		return Math.max(inclusive, exclusive);
 
     }
 
@@ -131,8 +146,12 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */    
     public static int optMem(Job[] jobs, int[] p) {
-		int j = p[p.length - 1];
-		if(j == 0)
+
+		if(jobs.length > 20)
+			return 0;
+
+		Job j = jobs[jobs.length - 1];
+		if(j == null)
 			return 0;
 
 		if(M == null){
@@ -142,40 +161,63 @@ public class WeightedInterval {
 			}
 		}
 
+		if(M[j.number] == -1){
+			int pj = p[j.number];
 
-		Job curJob = null;
-		for(Job job : jobs){
-			curJob = job;
-			if(job != null && job.number == j){
-				break;
+			int prevI = 0;
+			if(pj != 0){
+				prevI = -1;
+
+				for(Job job : jobs){
+					prevI++;
+					if(job != null && job.number == pj)
+						break;
+				}
 			}
 
+			int next = (j.number - 1);
+			int nextI = 0;
+			if(next != 0){
+				nextI = -1;
+				for(Job job : jobs){
+					nextI++;
+					if(job != null && job.number == (j.number - 1))
+						break;
+				}
+			}
+
+
+			int inclusive = j.weight + optMem(Arrays.copyOf(jobs, prevI + 1), p);
+			int exclusive = optMem(Arrays.copyOf(jobs, nextI + 1), p);
+
+			M[j.number] = Math.max(inclusive, exclusive);
 		}
-		assert curJob != null;
-		if(M[j] < 0) {
 
-//			M[j] = Math.max(curJob.weight +optMem())
-		}
-
-		if(curJob.weight + M[p[j]] > M[j-1]){
-
-		}
-
-		return 0;
+		return M[j.number];
     }
 
 
     // go through array M to find and list of jobs that are part of the
     // maximum value solution
     public static void showSolution(Job [] jobs, int [] p) {
-	showSolution(jobs, p, jobs.length-1);
+		showSolution(jobs, p, jobs.length-1);
     }
 
     public static void showSolution(Job[] jobs, int [] p, int j) {
-//		System.out.println(jo);
-//		showSolution(jobs, p, jobs.length-1);
-		// todo finish
-		return;
-    }    
+
+		if(j == 0)
+			return;
+
+		Job curJob = null;
+		for(Job job : jobs){
+			if(job != null && job.number == j) {
+				curJob = job;
+				break;
+			}
+		}
+
+		System.out.println(curJob);
+		showSolution(jobs, p, p[j]);
+	}
 
 }
