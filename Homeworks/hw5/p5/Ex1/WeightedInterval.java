@@ -172,7 +172,8 @@ public class WeightedInterval {
     }
 
     public static void showSolution(Job[] jobs, int [] p, int j) {
-
+//		System.out.println(jo);
+//		showSolution(jobs, p, jobs.length-1);
 		// todo finish
 		return;
     }    

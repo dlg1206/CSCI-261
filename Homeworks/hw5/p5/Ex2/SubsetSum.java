@@ -98,12 +98,29 @@ public class SubsetSum{
      */
     public static void showSolution(int [] itemWts, int w, int i) {
 
-		for(int n = i; n > 0; n--){
-			if(w - itemWts[n] > 0){
-				w = w - itemWts[n];
-				System.out.println("item " + n + " wt: " + itemWts[n]);
+//		int curWeight = 0;
+//
+//		for(;;){
+//			if(curWeight + itemWts[i] < w){
+//				System.out.println("item " + i + " wt: " + itemWts[i]);
+//				curWeight += itemWts[i--];
+//			} else {
+//				break;
+//			}
+//		}
+
+//		int a = itemWts.length - 1;
+		int b = M[i][w];
+
+		while(i >= 0 && b >= 0){
+
+			if(M[i][b] != 0){
+				System.out.println("item " + i + " wt: " + itemWts[i]);
+				b -= itemWts[i];
 			}
+			i--;
 		}
+
     }
     
 }
