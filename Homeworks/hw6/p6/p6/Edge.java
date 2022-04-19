@@ -1,4 +1,4 @@
-import java.util.*;
+package p6;
 
 public class Edge {
 
