@@ -112,12 +112,26 @@ public class Graph {
 	// if the path is empty, there is no update to this graph
         if (path.size() <=0) return;
 	
-	int b = bottleNeck(path);
+		int b = bottleNeck(path);
         // FINISH ME UP TO THE LAST STATEMENT BELOW
+		int pushBack = 0;
+		for(Edge edge : path){
+
+//			Edge graphEdge = pickOut(path, )
+
+			if(edge.flow + b + pushBack <= edge.capacity ){
+				edge.flow += b;
+				pushBack = 0;
+			} else {
+				edge.flow = edge.capacity;
+				pushBack = b - edge.flow;
+			}
+
+		}
 
 	    
-	// update the flow of this graph with the bottleneck in the path
-	this.flow +=b;
+		// update the flow of this graph with the bottleneck in the path
+		this.flow +=b;
     }
 
     /**
