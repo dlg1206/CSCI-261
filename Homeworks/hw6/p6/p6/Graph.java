@@ -117,14 +117,14 @@ public class Graph {
 		int pushBack = 0;
 		for(Edge edge : path){
 
-//			Edge graphEdge = pickOut(path, )
+			Edge graphEdge = pickOut(map.get(edge.source), edge.dest );
 
-			if(edge.flow + b + pushBack <= edge.capacity ){
-				edge.flow += b;
+			if(graphEdge.flow + b + pushBack <= edge.capacity ){
+				graphEdge.flow += b;
 				pushBack = 0;
 			} else {
-				edge.flow = edge.capacity;
-				pushBack = b - edge.flow;
+				graphEdge.flow = graphEdge.capacity;
+				pushBack = b - graphEdge.flow;
 			}
 
 		}
@@ -189,20 +189,20 @@ class ResGraph extends Graph{
      */             
     public ArrayList <Edge> DFS(String source, String target) {
 
-		Stack<String> stack = new Stack<>();
-		stack.push(source);
+		ArrayList<String> stack = new ArrayList<>();
+		stack.add(source);
 
 		// child -> parent
 		HashMap<String, String> visited = new HashMap<>();
 
 		visited.put(source, null);
 		while (!stack.isEmpty()){
-			String curNode = stack.pop();
+			String curNode = stack.remove(0);
 //			visited.add(curNode);
 
 			for(Edge edge : map.get(curNode)){
 				if(!stack.contains(edge.dest)){
-					stack.push(edge.dest);
+					stack.add(edge.dest);
 					visited.put(edge.dest, edge.source);
 				}
 
