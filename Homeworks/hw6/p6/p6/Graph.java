@@ -1,3 +1,7 @@
+/**
+ * @contributor: Derek Garcia
+ */
+
 package p6;
 
 import java.util.*;
@@ -12,8 +16,7 @@ public class Graph {
 
      /**
      * Construct a Graph object
-     * @param none
-     */
+	  */
     public Graph() {
 	this.map = new HashMap<String, ArrayList<Edge>>();
     }
@@ -111,7 +114,7 @@ public class Graph {
 	
 	int b = bottleNeck(path);
         // FINISH ME UP TO THE LAST STATEMENT BELOW
-	// ...
+
 	    
 	// update the flow of this graph with the bottleneck in the path
 	this.flow +=b;
@@ -172,9 +175,50 @@ class ResGraph extends Graph{
      */             
     public ArrayList <Edge> DFS(String source, String target) {
 
-	// FINISH ME
-	
-	return new ArrayList<Edge>(); // dummy return value of
+		Stack<String> stack = new Stack<>();
+		stack.push(source);
+
+		// child -> parent
+		HashMap<String, String> visited = new HashMap<>();
+
+		visited.put(source, null);
+		while (!stack.isEmpty()){
+			String curNode = stack.pop();
+//			visited.add(curNode);
+
+			for(Edge edge : map.get(curNode)){
+				if(!stack.contains(edge.dest)){
+					stack.push(edge.dest);
+					visited.put(edge.dest, edge.source);
+				}
+
+				if(edge.dest.equals(target)){
+					visited.put(edge.dest, edge.source);
+					break;
+				}
+			}
+
+			if(stack.contains(target)) break;
+
+		}
+
+		ArrayList<Edge> path = new ArrayList<>();
+		String child = target;
+		while(visited.get(child) != null){
+			String parent = visited.get(child);
+
+			for(Edge edge : map.get(parent)){
+				if(edge.dest.equals(child)){
+					path.add(0, edge );
+					break;
+				}
+			}
+
+			child = parent;
+
+		}
+
+	return path; // dummy return value of
 	                              // empty list which signals no path	
     }
 
