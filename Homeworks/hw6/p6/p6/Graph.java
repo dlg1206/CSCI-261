@@ -189,50 +189,9 @@ class ResGraph extends Graph{
      */             
     public ArrayList <Edge> DFS(String source, String target) {
 
-		ArrayList<String> stack = new ArrayList<>();
-		stack.add(source);
+		// skipped
 
-		// child -> parent
-		HashMap<String, String> visited = new HashMap<>();
-
-		visited.put(source, null);
-		while (!stack.isEmpty()){
-			String curNode = stack.remove(0);
-//			visited.add(curNode);
-
-			for(Edge edge : map.get(curNode)){
-				if(!stack.contains(edge.dest)){
-					stack.add(edge.dest);
-					visited.put(edge.dest, edge.source);
-				}
-
-				if(edge.dest.equals(target)){
-					visited.put(edge.dest, edge.source);
-					break;
-				}
-			}
-
-			if(stack.contains(target)) break;
-
-		}
-
-		ArrayList<Edge> path = new ArrayList<>();
-		String child = target;
-		while(visited.get(child) != null){
-			String parent = visited.get(child);
-
-			for(Edge edge : map.get(parent)){
-				if(edge.dest.equals(child)){
-					path.add(0, edge );
-					break;
-				}
-			}
-
-			child = parent;
-
-		}
-
-	return path; // dummy return value of
+	return new ArrayList<Edge>(); // dummy return value of
 	                              // empty list which signals no path	
     }
 
@@ -248,8 +207,50 @@ class ResGraph extends Graph{
     public ArrayList <Edge> BFS(String source, String target) {
 
 	// or FINISH ME
+		ArrayList<String> queue = new ArrayList<>();
+		queue.add(source);
+
+		// child -> parent
+		HashMap<String, String> predecessors = new HashMap<>();
+		ArrayList<String> visited = new ArrayList<>();
+		predecessors.put(source, null);
+		while (!queue.isEmpty()){
+			String curNode = queue.remove(0);
+			visited.add(curNode);
+
+			for(Edge edge : map.get(curNode)){
+				if(!visited.contains(edge.dest) && !queue.contains(edge.dest)){
+					queue.add(edge.dest);
+					predecessors.put(edge.dest, edge.source);
+				}
+
+				if(edge.dest.equals(target)){
+					predecessors.put(edge.dest, edge.source);
+					break;
+				}
+			}
+
+			if(queue.contains(target)) break;
+
+		}
+
+		ArrayList<Edge> path = new ArrayList<>();
+		String child = target;
+		while( predecessors.get(child) != null){
+			String parent =  predecessors.get(child);
+
+			for(Edge edge : map.get(parent)){
+				if(edge.dest.equals(child)){
+					path.add(0, edge );
+					break;
+				}
+			}
+
+			child = parent;
+
+		}
 	
-	return new ArrayList<Edge>(); // dummy return value of
+	return path; // dummy return value of
 	                              // empty list which signals no path
     }
     
