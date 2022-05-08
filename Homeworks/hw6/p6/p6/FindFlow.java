@@ -47,8 +47,8 @@ public class FindFlow {
             System.out.println(resGraph);
 	    // find a path in the residual graph, use either DFS or BFS
 	    // comment out the one you do not want
-            // path = resGraph.BFS(source,dest);
-            path = resGraph.DFS(source, dest);
+             path = resGraph.BFS(source,dest);
+//            path = resGraph.DFS(source, dest);
             //print the path
             System.out.println("path = " + path + "\n");
 	    // update (that is augment) the graph with the new path

@@ -1,3 +1,9 @@
+/**
+ * WeightedInterval.java
+ *
+ * @author Derek Garcia
+ */
+
 package Ex1;	// TODO REMOVE THIS
 
 import java.util.*;
@@ -61,25 +67,46 @@ public class WeightedInterval {
      *                    that is compatible with jobs[j]
      */
     public static int [] prior(Job[] jobs) {
-//		// todo comment this
 
-		int[] compatible = new int[jobs.length];
+		// init vars
+		ArrayList<Job> earliestStart = new ArrayList<>();
+		Job[] numeric = new Job[jobs.length];
 
-		for(int i = jobs.length - 1; i > 0; i--){
+		// sort jobs by start time / sorts jobs in numeric order
+		int startTime = 0;
+		while(earliestStart.size() != jobs.length - 1){
 
-			for(int j = i - 1; j > 0; j--){
-
-				if( jobs[j].finish <= jobs[i].start){
-					compatible[jobs[i].number] = jobs[j].number;
-					break;
+			for(Job job : jobs){
+				// if the job hasn't already been added and improved start time
+				if(job != null && !earliestStart.contains(job) && job.start <= startTime){
+					earliestStart.add(job);
+					numeric[job.number] = job;	// add to numeric order
 				}
 
 			}
-
-
-
+			startTime++;
 		}
 
+		// Build prior array
+		int[] compatible = new int[jobs.length];
+		for(Job job : numeric) {
+			if (job != null) {
+
+				// Start at end of list and work backwards
+				for (int i = job.number - 1; i > 0; i--) {
+
+					// if compatible and before value
+					if (job.start >= numeric[i].finish && job.number > numeric[i].number) {
+						compatible[job.number] = numeric[i].number;
+					}
+
+					// break if value was assigned
+					if (job.start - numeric[i].finish == 0)
+						break;
+				}
+			}
+		}
+		// return results
 		return compatible;
     }
 
@@ -94,33 +121,26 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */
     public static int optR(Job[] jobs, int[] p, int j) {
-	// todo comment
-		return 0;
 
-//		System.out.println("Current: " + j);
-//		if(j == 0){
-//			return 0;
-//		}
-//
-//		int inclusive = 0;
-//		int index = 0;
-//
-//		for(Job job : jobs){
-//			if(job != null && job.number == j){
-//				inclusive = job.weight;
-//			}
-//
-//		}
-//
-////		if(p[j] != 0)
-//		System.out.println("inclusive, heading to: " + p[j]);
-//			inclusive += optR(jobs, p, p[j]);
-//		System.out.println("exclusive, heading to: " + (j - 1));
-//		int exclusive = optR(jobs, p, j - 1);
-//
-//
-//		return Math.max(inclusive, exclusive);
+		// base case
+		if(j == 0)
+			return 0;
 
+		// get the current job as a Job class
+		Job curJob = null;
+		for(Job job : jobs){
+			curJob = job;
+			// break when found
+			if(job != null && job.number == j)
+				break;
+		}
+
+		assert curJob != null;
+		int inclusive = curJob.weight + optR(jobs, p, p[j]);	// use Job j
+		int exclusive = optR(jobs, p, j - 1);		// don't use Job j
+
+		// return larger value
+		return Math.max(inclusive, exclusive);
     }
 
     /**
@@ -131,10 +151,21 @@ public class WeightedInterval {
      * return max sum of weights of compatible jobs
      */    
     public static int optMem(Job[] jobs, int[] p) {
-		int j = p[p.length - 1];
-		if(j == 0)
+
+		// NOTE I couldn't solve the stack overflow issue, this is here to prevent overflow crashes
+		// START OVERFLOW GUARD
+		if(jobs.length > 20)	// works ok with smaller values
+			return 0;
+		// END OVERFLOW GUARD
+
+		// get job j
+		Job j = jobs[jobs.length - 1];
+
+		// base case
+		if(j == null)
 			return 0;
 
+		// init M if not made
 		if(M == null){
 			M = new int[jobs.length + 1];
 			for(int i = 1; i < M.length; i++){
@@ -142,39 +173,71 @@ public class WeightedInterval {
 			}
 		}
 
+		// if M[j] not visited, calc value
+		if(M[j.number] == -1){
+			int pj = p[j.number];
 
-		Job curJob = null;
-		for(Job job : jobs){
-			curJob = job;
-			if(job != null && job.number == j){
-				break;
+			// get index of previously compatible job
+			int prevI = 0;
+			if(pj != 0){
+				prevI = -1;
+
+				for(Job job : jobs){
+					prevI++;
+					// break when found
+					if(job != null && job.number == pj)
+						break;
+				}
 			}
 
+			// get index of the j - 1 job
+			int next = (j.number - 1);
+			int nextI = 0;
+			if(next != 0){
+				nextI = -1;
+				for(Job job : jobs){
+					nextI++;
+					// break when found
+					if(job != null && job.number == (j.number - 1))
+						break;
+				}
+			}
+
+			int inclusive = j.weight + optMem(Arrays.copyOf(jobs, prevI + 1), p);	// Vj + comp_Op(j)
+			int exclusive = optMem(Arrays.copyOf(jobs, nextI + 1), p);	// comp_op(j - 1)
+
+			// update value with max result
+			M[j.number] = Math.max(inclusive, exclusive);
 		}
-		assert curJob != null;
-		if(M[j] < 0) {
 
-//			M[j] = Math.max(curJob.weight +optMem())
-		}
-
-		if(curJob.weight + M[p[j]] > M[j-1]){
-
-		}
-
-		return 0;
+		// return stored value
+		return M[j.number];
     }
 
 
     // go through array M to find and list of jobs that are part of the
     // maximum value solution
     public static void showSolution(Job [] jobs, int [] p) {
-	showSolution(jobs, p, jobs.length-1);
+		showSolution(jobs, p, jobs.length-1);
     }
 
     public static void showSolution(Job[] jobs, int [] p, int j) {
 
-		// todo finish
-		return;
-    }    
+		// base case
+		if(j == 0)
+			return;
+
+		// get Job j from j
+		Job curJob = null;
+		for(Job job : jobs){
+			if(job != null && job.number == j) {
+				curJob = job;
+				break;
+			}
+		}
+
+		System.out.println(curJob);
+		showSolution(jobs, p, p[j]);	// get previous compatible job
+	}
 
 }

@@ -113,15 +113,22 @@ public class Graph {
         if (path.size() <=0) return;
 	
 		int b = bottleNeck(path);
-        // FINISH ME UP TO THE LAST STATEMENT BELOW
-		int pushBack = 0;
+
+		int pushBack = 0;	// initial pushback is always 0
+
+		// walk through each edge in the path
 		for(Edge edge : path){
 
+			// get corresponding graph edge from residual edge
 			Edge graphEdge = pickOut(map.get(edge.source), edge.dest );
 
+			assert graphEdge != null;	// negate warnings
+			// if edge can hold flow, bottleneck, and pushback, update flow
 			if(graphEdge.flow + b + pushBack <= edge.capacity ){
 				graphEdge.flow += b;
 				pushBack = 0;
+
+			// else max out flow by taking what can from b, then sending the rest as pushback
 			} else {
 				graphEdge.flow = graphEdge.capacity;
 				pushBack = b - graphEdge.flow;
@@ -189,50 +196,9 @@ class ResGraph extends Graph{
      */             
     public ArrayList <Edge> DFS(String source, String target) {
 
-		ArrayList<String> stack = new ArrayList<>();
-		stack.add(source);
+		// skipped
 
-		// child -> parent
-		HashMap<String, String> visited = new HashMap<>();
-
-		visited.put(source, null);
-		while (!stack.isEmpty()){
-			String curNode = stack.remove(0);
-//			visited.add(curNode);
-
-			for(Edge edge : map.get(curNode)){
-				if(!stack.contains(edge.dest)){
-					stack.add(edge.dest);
-					visited.put(edge.dest, edge.source);
-				}
-
-				if(edge.dest.equals(target)){
-					visited.put(edge.dest, edge.source);
-					break;
-				}
-			}
-
-			if(stack.contains(target)) break;
-
-		}
-
-		ArrayList<Edge> path = new ArrayList<>();
-		String child = target;
-		while(visited.get(child) != null){
-			String parent = visited.get(child);
-
-			for(Edge edge : map.get(parent)){
-				if(edge.dest.equals(child)){
-					path.add(0, edge );
-					break;
-				}
-			}
-
-			child = parent;
-
-		}
-
-	return path; // dummy return value of
+	return new ArrayList<Edge>(); // dummy return value of
 	                              // empty list which signals no path	
     }
 
@@ -247,10 +213,65 @@ class ResGraph extends Graph{
      */             
     public ArrayList <Edge> BFS(String source, String target) {
 
-	// or FINISH ME
-	
-	return new ArrayList<Edge>(); // dummy return value of
-	                              // empty list which signals no path
+		// init queue
+		ArrayList<String> queue = new ArrayList<>();
+		queue.add(source);
+
+		// child -> parent
+		HashMap<String, String> predecessors = new HashMap<>();		// used for path creation later
+		predecessors.put(source, null);
+
+		ArrayList<String> visited = new ArrayList<>();
+
+		// Repeat until explore all nodes
+		while (!queue.isEmpty()){
+
+			// get first node from queue
+			String curNode = queue.remove(0);
+			visited.add(curNode);
+
+			// Explore all edges from this node
+			for(Edge edge : map.get(curNode)){
+				// add to queue if dest node is unvisited and not enqueued
+				if(!visited.contains(edge.dest) && !queue.contains(edge.dest)){
+					queue.add(edge.dest);
+					predecessors.put(edge.dest, edge.source);	// update predecessors map
+				}
+
+				// break if reach goal
+				if(edge.dest.equals(target)){
+					predecessors.put(edge.dest, edge.source);	// update predecessors map
+					break;
+				}
+			}
+
+			// break if goal reached
+			if(queue.contains(target)) break;
+
+		}
+
+		// begin path construction
+		ArrayList<Edge> path = new ArrayList<>();
+		String child = target;
+
+		// start at sink and build path backwards to the source
+		while( predecessors.get(child) != null){
+			String parent =  predecessors.get(child);
+
+			// get correct edge
+			for(Edge edge : map.get(parent)){
+				if(edge.dest.equals(child)){
+					path.add(0, edge );
+					break;
+				}
+			}
+
+			// update child
+			child = parent;
+		}
+
+		// path is the BFS path
+		return path;
     }
     
 

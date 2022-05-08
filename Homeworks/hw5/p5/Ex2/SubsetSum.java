@@ -1,3 +1,9 @@
+/**
+ * SubsetSum.java
+ *
+ * @author Derek Garcia
+ */
+
 package Ex2;	// todo REMOVE
 
 import java.util.*;
@@ -42,23 +48,26 @@ public class SubsetSum{
      *                    that is compatible with jobs[j]
      */
     public static int subsetSumMem(int [] itemWts, int W) {
-        M = new int [itemWts.length][W+1];
+        M = new int [itemWts.length][W+1];	// init matrix
 
+		// for each row in the matrix
 		for(int row = 1; row < itemWts.length; row++){
+
 			int curWeight = itemWts[row];
 
+			// for each col in the row
 			for(int col = 0; col < W + 1; col++){
+				// if col < weight, set this col as prev row value
 				if(col < curWeight){
 					M[row][col] = M[row - 1][col];
+				// else set max weight using / excluding current item
 				} else {
 					M[row][col] = Math.max(M[row - 1][col], curWeight + M[row - 1][col - curWeight]);
 				}
-
 			}
-
 		}
 
-
+		// return max value
 		return M[itemWts.length - 1][W];
 
     }
@@ -74,11 +83,15 @@ public class SubsetSum{
      */
     public static int subsetSumR(int [] itemWts, int w, int i) {
 
+		// base case
 		if(i == 0)
 			return 0;
 
+		// If the item weights too much, get next item
 		if(w < itemWts[i]){
 			return subsetSumR(itemWts, w, i - 1);
+
+		// else calc max weight using / excluding item
 		} else {
 			return Math.max(
 					subsetSumR(itemWts, w, i - 1),
@@ -98,12 +111,22 @@ public class SubsetSum{
      */
     public static void showSolution(int [] itemWts, int w, int i) {
 
-		for(int n = i; n > 0; n--){
-			if(w - itemWts[n] > 0){
-				w = w - itemWts[n];
-				System.out.println("item " + n + " wt: " + itemWts[n]);
-			}
+		// base case
+		if (i <= 0)
+			return;
+
+		// if current index == row below, get next item
+		if (M[i][w] == M[i - 1][w])
+			showSolution(itemWts, w, i - 1);
+
+		// if cur index == curr weight + weight previous row accounting for curr weight
+		if (M[i][w] == itemWts[i] + M[i - 1][w - itemWts[i]]) {
+			System.out.println("item " + i + " wt: " + itemWts[i]);
+
+			// update weight and get next item
+			showSolution(itemWts, w-itemWts[i], i - 1);
 		}
+
     }
     
 }
